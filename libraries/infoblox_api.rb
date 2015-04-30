@@ -26,12 +26,13 @@ module Infoblox
       Chef::Log.info "create_host_record"
       record = Infoblox::Arecord.new(connection: connection, 
                                     ipv4addr: params[:ipv4addr],
-                                    name: params[:name])
+                                    name: params[:name],
+                                    view: params[:view])
       begin
         record.post
         Chef::Log.info "Record is successfully created."
       rescue
-        raise "Somthing went wrong with Recod creation."
+        raise "Something went wrong with Record creation."
       end
     end
 
@@ -45,7 +46,7 @@ module Infoblox
         record.post
         Chef::Log.info "Record is successfully created."
       rescue
-        raise "Somthing went wrong with Recod creation."
+        raise "Something went wrong with Record creation."
       end
     end
 
