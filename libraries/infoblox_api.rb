@@ -1,6 +1,6 @@
 module Infoblox
   module Api
-    # require 'mixlib'
+
     require 'ipaddr'
     require 'infoblox'
 
@@ -30,9 +30,9 @@ module Infoblox
                                     view: params[:view])
       begin
         record.post
-        Chef::Log.info "Record is successfully created."
+        Chef::Log.info "Host Record is successfully created."
       rescue
-        raise "Something went wrong with Record creation."
+        raise e.message
       end
     end
 
@@ -44,20 +44,23 @@ module Infoblox
                                     name: params[:name])
       begin
         record.post
-        Chef::Log.info "Record is successfully created."
+        Chef::Log.info "DNS Record is successfully created."
       rescue
-        raise "Something went wrong with Record creation."
+        raise e.message
       end
     end
 
     def create_fixed_address_record(params)
-      Chef::Log.info "create_fixed_address_record"
+      begin
+        fixedaddr = Infoblox::Fixedaddress.new(connection: connection,
+                                            ipv4addr: params[:ipv4addr],
+                                            mac: params[:mac_address])
+        fixedaddr.post
+        Chef::Log.info "Fixed Address Record is successfully created."
+      rescue Exception => e
+        raise e.message
+      end
     end
-
-    # def execute_command(cmd)
-    #   resp = Mixlib::ShellOut.new(cmd)
-    #   resp.run_command
-    # end
 
   end
 end
