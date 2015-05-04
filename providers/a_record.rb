@@ -27,9 +27,17 @@ action :get_record do
   end
 end
 
-# action :get_ip do
-#   Chef::Log.info "Action : get_ip"
-# end
+action :get_ip do
+  request_params = {}
+  request_params[:_ref] = new_resource._ref
+  Chef::Log.info "Action : get IP on the basis of object reference."
+  record = Infoblox::Arecord.new(connection: connection, name: request_params[:_ref])
+  begin
+    record.get.body[0]["ipv4addr"]
+  rescue
+    raise "Something went wrong while fetching the record or record not found."
+  end
+end
 
 action :delete do
   request_params = {}
