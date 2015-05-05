@@ -20,7 +20,7 @@ action :reserve_network_ip do
 
   # set request params.
   request_params = {}
-  request_params[:network] = new_resource.name
+  request_params[:network] = new_resource.network
   request_params[:network_view] = new_resource.network_view unless new_resource.network_view.nil?
   request_params[:network_container] = new_resource.network_container unless new_resource.network_container.nil?
 

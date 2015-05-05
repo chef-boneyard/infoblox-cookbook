@@ -19,7 +19,11 @@ module Infoblox
     def get_ip_address(params = {})
       raise "No parameters defined." if params.empty?
       Chef::Log.info "get_ip_address"
-      record = Infoblox::Netowk.new(connection: connection, params)
+      record = Infoblox::Netowk.new(connection: connection, network: params[:network])
+      record.network_view = params[:network_view] if params[:network_view]
+      record.network_container = params[:network_container] if params[:network_container]
+      # TODO
+      record.network = get_network_reference(record)
       return record.next_available_ip
     end
 
@@ -65,6 +69,10 @@ module Infoblox
       rescue Exception => e
         raise e.message
       end
+    end
+
+    def get_network_reference(network)
+      JSON.parse(network.get.body).first["_ref"].gsub("network/")
     end
 
   end
