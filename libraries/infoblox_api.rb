@@ -3,7 +3,7 @@ module Infoblox
 
     require 'ipaddr'
     require 'infoblox'
-    require 'pry'
+    
     # IP Validation.
     def is_valid_ip?(ipaddr)
       IPAddr.new(ipaddr) 
@@ -26,11 +26,11 @@ module Infoblox
       return record.next_available_ip.first
     end
 
-    private 
-
     def connection
       @connection ||= Infoblox::Connection.new(username: node[:infoblox][:username], password: node[:infoblox][:password], host: node[:infoblox][:nios])
     end
+
+    private
 
     def create_host_record(params)
       Chef::Log.info "create_host_record"
@@ -74,7 +74,12 @@ module Infoblox
     end
 
     def get_network_reference(network)
-      JSON.parse(network.get.body).first["_ref"].gsub("network/", "")
+      network_subnet = network.network
+      network_ref = ''
+      res = JSON.parse(network.get.body).map{ | net |
+        network_ref = net["_ref"] if net["network"] == network_subnet
+      }
+      network_ref.gsub("network/", "")
     end
 
   end

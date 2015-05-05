@@ -1,5 +1,5 @@
 
-actions :create, :get_network_info_by_ref, :get_next_ip, :delete
+actions :create, :get_network_info, :get_next_ip, :delete
 default_action :create
 
 attribute :network, kind_of: String, name_attribute: true, required: true
