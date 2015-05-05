@@ -16,6 +16,13 @@ module Infoblox
       send("create_#{usage_type}_record",params)
     end
 
+    def get_ip_address(params = {})
+      raise "No parameters defined." if params.empty?
+      Chef::Log.info "get_ip_address"
+      record = Infoblox::Netowk.new(connection: connection, params)
+      return record.next_available_ip
+    end
+
     private 
 
     def connection
@@ -37,8 +44,6 @@ module Infoblox
     end
 
     def create_dns_record(params)
-      Chef::Log.info "create_dns_record"
-      Chef::Log.info "create_host_record"
       record = Infoblox::Host.new(connection: connection, 
                                     ipv4addr: params[:ipv4addr],
                                     name: params[:name])

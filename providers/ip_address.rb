@@ -15,8 +15,20 @@ action :reserve_static_ip do
 
 end
 
-action :reserve_ip_in_network do
+action :reserve_network_ip do
   Chef::Log.info "Action : reserve_static_ip"
+
+  # set request params.
+  request_params = {}
+  request_params[:network] = new_resource.name
+  request_params[:network_view] = new_resource.network_view unless new_resource.network_view.nil?
+  request_params[:network_container] = new_resource.network_container unless new_resource.network_container.nil?
+
+  # get next available ip address from defined network
+  request_params[:ipv4addr] = get_ip_address(params)
+
+  resp = request(new_resource.usage_type, request_params)
+
 end
 
 action :reserve_ip_in_range do
