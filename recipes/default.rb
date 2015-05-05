@@ -17,6 +17,7 @@
 
 infoblox_ip_address "Reserve IP in Network" do
   network "10.10.70.0/24"
-  action :reserve_network_ip
   usage_type 'host'
+  name "clogeny8.test.local"
+  action :reserve_network_ip
 end
