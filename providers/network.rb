@@ -70,16 +70,6 @@ def get_network_info(params)
   end
 end
 
-def get_next_ip_address(params)
-  network = create_network_object(params) 
-  network.network = params[:network]
-  begin
-  	Chef::Log.info "Next available IP is : #{network.next_available_ip.first}"
-  rescue Exception => e
-    raise e.message
-  end
-end
-
 def create_network_object(params)
   network = Infoblox::Network.new(connection: connection)
   network.network = params[:network]

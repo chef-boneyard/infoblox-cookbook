@@ -27,9 +27,7 @@ action :reserve_network_ip do
   request_params[:network_container] = new_resource.network_container unless new_resource.network_container.nil?
 
   # get next available ip address from defined network
-  request_params[:ipv4addr] = get_ip_address(request_params)
-  Chef::Log.info "Next available IP in network is : #{request_params[:ipv4addr]}"
-  
+  request_params[:ipv4addr] = get_next_ip_address(request_params)  
   resp = request(new_resource.usage_type, request_params)
 
 end

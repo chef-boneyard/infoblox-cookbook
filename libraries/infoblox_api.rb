@@ -16,18 +16,15 @@ module Infoblox
       send("create_#{usage_type}_record", params)
     end
 
-    def get_ip_address(params = {})
-      raise "No parameters defined." if params.empty?
-      record = Infoblox::Network.new(connection: connection, network: params[:network])
-      record.network_view = params[:network_view] if params[:network_view]
-      record.network_container = params[:network_container] if params[:network_container]
-      # TODO
-      record.network = get_network_reference(record)
-      return record.next_available_ip.first
+    def get_next_ip_address(params)
+      network_obj = Infoblox::Network.find(connection, network: params[:network])
+      ip = network_obj.first.next_available_ip.first
+      Chef::Log.info "Next available IP in network is : #{ip}"
+      return ip
     end
 
     def connection
-      @connection ||= Infoblox::Connection.new(username: node[:infoblox][:username], password: node[:infoblox][:password], host: node[:infoblox][:nios])
+      @connection ||= Infoblox::Connection.new(username: node[:infoblox][:username], password: node[:infoblox][:password], host: node[:infoblox][:nios], logger: Logger.new(STDOUT))
     end
 
     private
