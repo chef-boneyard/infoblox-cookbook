@@ -1,4 +1,6 @@
 include Infoblox::Api
+require 'faraday'
+require 'net/http'
 
 action :create do
   request_params = create_network_params(new_resource)
@@ -26,7 +28,6 @@ private
 def create_network_params(new_resource)
   request_params = {}
   request_params[:network] = new_resource.network unless new_resource.network.nil?
-  request_params[:network_ref] = new_resource.network_ref unless new_resource.network_ref.nil?
   request_params[:network_view] = new_resource.network_view unless new_resource.network_view.nil?
   request_params[:network_container] = new_resource.network_container unless new_resource.network_container.nil? 
   request_params[:authority] = new_resource.authority unless new_resource.authority.nil?
@@ -42,8 +43,12 @@ def create_network(params)
   begin
     network_obj.post
     Chef::Log.info "Successfully created network."
-  rescue Exception => e
-    raise e.message
+  rescue  StandardError => e
+    unless e.message.match(/Client.Ibap.Data.Conflict/).nil?
+      Chef::Log.info "Network already exists, Please select another network."
+    else
+      raise e.message
+    end
   end
 end
 
@@ -55,7 +60,7 @@ def delete_network(params)
       network_ref.first.delete
       Chef::Log.info "Netork successfully deleted"
     rescue Exception => e
-      e.message
+      Chef::Log.error e.message
     end
   else
     Chef::Log.info "Netork Not Found"
@@ -64,14 +69,11 @@ end
 
 # To get network information
 def get_network_info(params)
-  network_obj = unless params[:network].empty?
-                  Infoblox::Network.find(connection, network: params[:network])
-                else
-                  JSON.parse(Infoblox::Network.new(connection: connection, network: params[:network_ref]).get.body)
-                end
+  network_obj = JSON.parse(Infoblox::Network.new(connection: connection, network: params[:network]).get.body)
+  network_info = network_obj.select{|n| n["network"].eql?(params[:network]) || n["_ref"].match(params[:network]) }.first
 
-  unless network_obj.empty?
-    network_obj.first
+  unless network_info.nil?
+    network_info
     Chef::Log.info "Netork information successfully retrieved"
   else
     Chef::Log.info "Netork Not Found"

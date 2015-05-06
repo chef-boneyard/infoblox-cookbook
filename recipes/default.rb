@@ -7,17 +7,17 @@
 # All rights reserved - Do Not Redistribute
 #
 
-# infoblox_ip_address "Reserve static IP" do
-#   name "clogeny.test.local"
-#   ipv4addr '10.10.70.36'
-#   usage_type 'host'
-#   mac '00-0C-29-79-F7-5D'
-#   action :reserve_static_ip
-# end
-
-infoblox_ip_address "Reserve IP in Network" do
-  network "10.10.70.0/24"
-  usage_type 'host'
-  name "clogeny8.test.local"
-  action :reserve_network_ip
+infoblox_ip_address "Reserve static IP" do
+  name node[:ip_address][:hostname]
+  ipv4addr node[:ip_address][:ipv4addr]
+  usage_type node[:ip_address][:usage_type]
+  mac node[:ip_address][:mac]
+  action :reserve_static_ip
 end
+
+# infoblox_ip_address "Reserve IP in Network" do
+#   network node[:ip_address][:network]
+#   usage_type 'host'
+#   name node[:ip_address][:hostname]
+#   action :reserve_network_ip
+# end
