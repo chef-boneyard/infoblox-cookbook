@@ -26,7 +26,7 @@ private
 def create_network_params(new_resource)
   request_params = {}
   request_params[:network] = new_resource.network unless new_resource.network.nil?
-
+  request_params[:network_ref] = new_resource.network_ref unless new_resource.network_ref.nil?
   request_params[:network_view] = new_resource.network_view unless new_resource.network_view.nil?
   request_params[:network_container] = new_resource.network_container unless new_resource.network_container.nil? 
   request_params[:authority] = new_resource.authority unless new_resource.authority.nil?
@@ -51,24 +51,29 @@ end
 def delete_network(params)
   network_ref = Infoblox::Network.find(connection, network: params[:network])
   unless network_ref.empty?
-  	begin
-  	  network_ref.first.delete
-  	  Chef::Log.info "Netork successfully deleted"  
-  	rescue Exception => e
-  	  e.message
-  	end
+    begin
+      network_ref.first.delete
+      Chef::Log.info "Netork successfully deleted"
+    rescue Exception => e
+      e.message
+    end
   else
-  	Chef::Log.info "Netork Not Found"
+    Chef::Log.info "Netork Not Found"
   end
 end
 
 # To get network information
 def get_network_info(params)
-  network_ref = Infoblox::Network.find(connection, network: params[:network])
-  unless network_ref.empty?
-  	network_ref.first
-  	Chef::Log.info "Netork information successfully retrieved"  
+  network_obj = unless params[:network].empty?
+                  Infoblox::Network.find(connection, network: params[:network])
+                else
+                  JSON.parse(Infoblox::Network.new(connection: connection, network: params[:network_ref]).get.body)
+                end
+
+  unless network_obj.empty?
+    network_obj.first
+    Chef::Log.info "Netork information successfully retrieved"
   else
-  	Chef::Log.info "Netork Not Found"
+    Chef::Log.info "Netork Not Found"
   end
 end

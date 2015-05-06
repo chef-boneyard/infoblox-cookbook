@@ -6,6 +6,7 @@ end
 
 infoblox_network "Get Network information" do
   network node[:network][:subnet]
+  network_ref node[:network][:network_ref]
   action :get_network_info
 end
 
