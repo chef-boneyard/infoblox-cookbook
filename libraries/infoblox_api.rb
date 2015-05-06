@@ -40,16 +40,19 @@ module Infoblox
     private
 
     def create_host_record(params)
-      Chef::Log.info "create_host_record"
       record = Infoblox::Arecord.new(connection: connection)
       record.ipv4addr = params[:ipv4addr] if params[:ipv4addr]
       record.name = params[:name] if params[:name]
       record.view = params[:view] if params[:view]
       begin
         record.post
-        Chef::Log.info "Host Record is successfully created."
-      rescue
-        raise e.message
+        Chef::Log.info "A-record successfully created."
+      rescue StandardError => e
+        unless e.message.match(/Client.Ibap.Data.Conflict/).nil?
+          Chef::Log.info "A-record already exists, Please select another A-record."
+        else
+          raise e.message
+        end
       end
     end
 

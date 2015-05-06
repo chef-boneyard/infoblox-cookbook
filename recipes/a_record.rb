@@ -1,6 +1,10 @@
+infoblox_a_record "Create A-record" do
+  ipv4addr node[:a_record][:ipv4addr]
+  name node[:a_record][:name]
+  action :create
+end
 
-
-a_record "Delete A Record" do
-  _ref "record:a/ZG5zLmJpbmRfYSQuX2RlZmF1bHQubG9jYWwudGVzdCxjbG9nZW55NCwxMC4xMC43MC4zNA:clogeny4.test.local/default"
+infoblox_a_record "Delete A-record" do
+  name node[:a_record][:ipv4addr]
   action :delete
 end
