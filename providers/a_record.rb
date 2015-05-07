@@ -18,28 +18,50 @@ action :get_record do
   request_params = {}
   request_params[:name] = new_resource.name
   Chef::Log.info "Action : get_record on the basis of hostname/FQDN"
-  Infoblox::Arecord.wapi_object = request_params[:name]
-  record = Infoblox::Arecord.new(connection: connection, name: request_params[:name])
+  
   begin
-    record.get
-  rescue
-    raise "Something went wrong while fetching the record or record not found."
+    record = Infoblox::Arecord.find(connection, name: request_params[:name])
+    unless record.empty?
+       Chef::Log.info "Arecord information retrieved successfully"
+    else
+       Chef::Log.info "Arecord information not found"
+    end
+  rescue StandardError => e
+    unless e.message.match(/Client.Ibap.Proto/)
+      Chef::Log.error "Invalid Request"
+    else
+      raise "Something went wrong while fetching the record"
+    end
   end
 end
 
 action :get_ip do
+  Chef::Log.info "Action : get IP on the basis of object reference/hostname/ipv4address."
   request_params = {}
-  request_params[:_ref] = new_resource._ref
-  binding.pry
-  Chef::Log.info "Action : get IP on the basis of object reference."
-  Infoblox::Arecord.wapi_object = request_params[:name]
-  record = Infoblox::Arecord.new(connection: connection, name: request_params[:_ref])
-  
-  binding.pry
+  request_params[:name] = new_resource.name unless new_resource.name.nil?
+  request_params[:ipv4addr] = new_resource.ipv4addr unless new_resource.ipv4addr.nil?
+  request_params[:record_ref] = new_resource.record_ref unless new_resource.record_ref.nil?
+
   begin
-    record.get.body[0]["ipv4addr"]
-  rescue
-    raise "Something went wrong while fetching the record or record not found."
+    ips = []
+    unless request_params[:record_ref].nil?
+      record = JSON.parse(Infoblox::Arecord.new(connection: connection).get.body)
+      a_record = record.select{ |ref| ref["_ref"].match(request_params[:record_ref]) }
+      a_record.each{ |record| ips << record["ipv4addr"] }
+    else
+      Infoblox::Arecord.find(connection, request_params).each{ |record| ips << record.ipv4addr}
+    end
+    unless ips.empty?
+      Chef::Log.info "A-record IP information successfully retrieved"
+    else
+      Chef::Log.info "A-record IP not found"
+    end
+  rescue StandardError => e
+    unless e.message.match(/Client.Ibap.Proto/)
+      Chef::Log.error "Invalid Request"
+    else
+      raise "Something went wrong while fetching the record or record not found."
+    end
   end
 end
 
