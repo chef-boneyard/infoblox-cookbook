@@ -40,57 +40,39 @@ module Infoblox
     private
 
     def create_host_record(params)
-      record = Infoblox::Arecord.new(connection: connection)
-      record.ipv4addr = params[:ipv4addr] if params[:ipv4addr]
-      record.name = params[:name] if params[:name]
+      record = Infoblox::Host.new(connection: connection, ipv4addrs: params[:ipv4addrs], name: params[:name])
       record.view = params[:view] if params[:view]
       begin
         record.post
-        Chef::Log.info "A-record successfully created."
-      rescue StandardError => e
-        unless e.message.match(/Client.Ibap.Data.Conflict/).nil?
-          Chef::Log.info "A-record already exists, Please select another A-record."
-        else
-          raise e.message
-        end
+        Chef::Log.info "Host record successfully created."
+      rescue Exception => e
+        Chef::Log.error e.message.split("text\":")[1].chomp('}')
       end
     end
 
     def create_dns_record(params)
-      record = Infoblox::Host.new(connection: connection)
-      record.ipv4addr = params[:ipv4addr] if params[:ipv4addr]
-      record.name = params[:name] if params[:name]
+      record = Infoblox::Arecord.new(connection: connection, name: params[:name], ipv4addr: params[:ipv4addr])
       record.view = params[:view] if params[:view]
       begin
         record.post
         Chef::Log.info "DNS Record is successfully created."
-      rescue
-        raise e.message
+      rescue Exception => e
+        Chef::Log.error e.message.split("text\":")[1].chomp('}')
       end
     end
 
     def create_fixed_address_record(params)
-      record = Infoblox::Fixedaddress.new(connection: connection)
-      record.ipv4addr = params[:ipv4addr] if params[:ipv4addr]
+      record = Infoblox::Fixedaddress.new(connection: connection, ipv4addr: params[:ipv4addr])
       record.name = params[:name] if params[:name]
       record.view = params[:view] if params[:view]
-      record.mac = params[:mac_address] if params[:mac_address]
+      record.mac = params[:mac] if params[:mac]
       begin
         record.post
         Chef::Log.info "Fixed Address Record is successfully created."
       rescue Exception => e
-        raise e.message
+        Chef::Log.error e.message.split("text\":")[1].chomp('}')
       end
     end
-
-    # def get_network_reference(network)
-    #   network_subnet = network.network
-    #   network_ref = ''
-    #   res = JSON.parse(network.get.body).map{ | net |
-    #     network_ref = net["_ref"] if net["network"] == network_subnet
-    #   }
-    #   network_ref.gsub("network/", "")
-    # end
 
   end
 end

@@ -1,7 +1,6 @@
 include Infoblox::Api
 
 action :create do
-
   # validation
   is_valid_ip?(new_resource.ipv4addr)    
 
@@ -11,7 +10,7 @@ action :create do
   request_params[:ipv4addr] = new_resource.ipv4addr
   request_params[:view] = new_resource.view unless new_resource.view.nil? 
 
-  resp = create_host_record(request_params)
+  resp = create_a_record(request_params)
 end
 
 action :get_record do
@@ -71,9 +70,11 @@ action :delete do
   delete_a_record(request_params)
 end
 
+private
+
 # delete A-record
 def delete_a_record(params)
-  a_record_obj = Infoblox::Arecord.find(connection, ipv4addr: params[:name])
+  a_record_obj = Infoblox::Arecord.find(connection, params)
   unless a_record_obj.empty?
     begin
       a_record_obj.first.delete
@@ -90,5 +91,21 @@ end
 def create_a_record_params(new_resource)
   request_params = {}
   request_params[:name] = new_resource.name
+  request_params[:ipv4addr] = new_resource.ipv4addr
   request_params
+end
+
+def create_a_record(params)
+  record = Infoblox::Arecord.new(connection: connection, name: params[:name], ipv4addr: params[:ipv4addr])
+  record.view = params[:view] if params[:view]
+  begin
+    record.post
+    Chef::Log.info "A-record successfully created."
+  rescue Exception => e
+    unless e.message.match(/Client.Ibap.Data.Conflict/).nil?
+      Chef::Log.info "A-record already exists, Please select another A-record."
+    else
+      raise e.message
+    end
+  end
 end

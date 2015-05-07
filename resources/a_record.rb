@@ -3,8 +3,8 @@ actions :create, :get_record, :get_ip, :delete
 default_action :create
 
 # Name for A record in FQDN format.
-attribute :name, kind_of: String, name_attribute: true#, required: true
-attribute :ipv4addr, kind_of: String#, required: true
+attribute :name, kind_of: String, name_attribute: true, required: true
+attribute :ipv4addr, kind_of: String, required: true
 attribute :view, kind_of: String
 attribute :record_ref, kind_of: String
 
