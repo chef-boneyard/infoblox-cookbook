@@ -80,7 +80,7 @@ def delete_a_record(params)
   unless a_record_obj.empty?
     begin
       a_record_obj.each{ |record| record.delete }
-      Chef::Log.info "Arecord successfully deleted"
+      Chef::Log.info "Arecord(s) successfully deleted"
     rescue Exception => e
       Chef::Log.error e.message
     end
