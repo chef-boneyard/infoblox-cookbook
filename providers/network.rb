@@ -43,7 +43,7 @@ def create_network(params)
   begin
     network_obj.post
     Chef::Log.info "Successfully created network."
-  rescue  StandardError => e
+  rescue  Exception => e
     unless e.message.match(/Client.Ibap.Data.Conflict/).nil?
       Chef::Log.info "Network already exists, Please select another network."
     else

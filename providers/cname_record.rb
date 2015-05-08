@@ -26,7 +26,7 @@ def create_cname_record(params)
   begin
     record.post
     Chef::Log.info "cname-record successfully created."
-  rescue StandardError => e
+  rescue Exception => e
     unless e.message.match(/Client.Ibap.Data.Conflict/).nil?
       Chef::Log.info "cname-record already exists, Please select another cname-record."
     else

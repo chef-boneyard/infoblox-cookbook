@@ -11,8 +11,8 @@ action :create do
   record.mac = request_param[:mac] unless request_param[:mac].nil?
 
   begin
-    record.post
     Chef::Log.info "Fixedaddress successfully created"
+    record.post
   rescue Exception => e
     Chef::Log.error e.message.split("text\":")[1].chomp('}')
   end  
@@ -25,8 +25,8 @@ action :get_info do
 
   begin
     unless record.nil?
-      record
       Chef::Log.info "Fixedaddress information successfully retrived"
+      record
     else
       Chef::Log.info "Fixedaddress record not found"
     end
@@ -41,8 +41,8 @@ action :remove do
   record = Infoblox::Fixedaddress.find(connection, request_param).first
   begin
     unless record.nil?
-      record.delete
       Chef::Log.info "Fixedaddress successfully deleted"
+      record.delete
     else
       Chef::Log.info "Fixedaddress record not found"
     end
@@ -61,8 +61,8 @@ action :create_in_network do
   record.name = request_param[:name] unless request_param[:name].nil?
   record.mac = request_param[:mac] unless request_param[:mac].nil?
   begin
-    record.post
     Chef::Log.info "Fixedaddress successfully created"
+    record.post
   rescue Exception => e
     Chef::Log.error e.message.split("text\":")[1].chomp('}')
   end  

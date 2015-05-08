@@ -22,10 +22,11 @@ action :get_record do
     record = Infoblox::Arecord.find(connection, name: request_params[:name])
     unless record.empty?
        Chef::Log.info "Arecord information retrieved successfully"
+       record
     else
        Chef::Log.info "Arecord information not found"
     end
-  rescue StandardError => e
+  rescue Exception => e
     unless e.message.match(/Client.Ibap.Proto/)
       Chef::Log.error "Invalid Request"
     else
@@ -52,10 +53,11 @@ action :get_ip do
     end
     unless ips.empty?
       Chef::Log.info "A-record IP information successfully retrieved"
+      ips
     else
       Chef::Log.info "A-record IP not found"
     end
-  rescue StandardError => e
+  rescue Exception => e
     unless e.message.match(/Client.Ibap.Proto/)
       Chef::Log.error "Invalid Request"
     else
