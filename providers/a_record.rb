@@ -77,7 +77,7 @@ def delete_a_record(params)
   a_record_obj = Infoblox::Arecord.find(connection, params)
   unless a_record_obj.empty?
     begin
-      a_record_obj.first.delete
+      a_record_obj.each{ |record| record.delete }
       Chef::Log.info "Arecord successfully deleted"
     rescue Exception => e
       Chef::Log.error e.message
