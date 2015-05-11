@@ -28,7 +28,6 @@ action :reserve_network_ip do
 end
 
 action :reserve_ip_in_range do
-  Chef::Log.info "Action : reserve_ip_in_range"
   request_params = {}
   request_params[:network_view] = new_resource.view unless new_resource.view.nil?
   request_params[:start_addr] = new_resource.start_addr unless new_resource.start_addr.nil?
