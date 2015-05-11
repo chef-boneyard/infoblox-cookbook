@@ -11,9 +11,11 @@ attribute :mac, kind_of: String
 attribute :network, kind_of: String
 attribute :network_view, kind_of: String
 attribute :network_container, kind_of: String
+attribute :exclude, kind_of: String
 
-# TODO
 # next available IP form defined range
+attribute :start_addr, kind_of: String
+attribute :end_addr, kind_of: String
 
 # To defined type of action for IP addresses
 attribute :usage_type, kind_of: String, :equal_to => ["host", "dns", "fixed_address"], default: "host"
