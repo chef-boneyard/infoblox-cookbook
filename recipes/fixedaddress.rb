@@ -1,11 +1,11 @@
-infoblox_fixedaddress "Fixedaddress Remove" do
+infoblox_fixedaddress "Fixedaddress Create" do
   ipv4addr node[:fixedaddress][:ipv4addr]
   mac node[:fixedaddress][:mac]
   name node[:fixedaddress][:name]
   action :create
 end
 
-infoblox_fixedaddress "Fixedaddress Remove" do
+infoblox_fixedaddress "Get info for a Fixedaddress" do
   ipv4addr node[:fixedaddress][:ipv4addr]
   action :get_info
 end
@@ -16,7 +16,7 @@ infoblox_fixedaddress "Fixedaddress Remove" do
   action :remove
 end
 
-infoblox_fixedaddress "Fixedaddress Remove" do
+infoblox_fixedaddress "Create Fixedaddress in Network" do
   network node[:fixedaddress][:network]
   mac node[:fixedaddress][:mac]
   name node[:fixedaddress][:name]
