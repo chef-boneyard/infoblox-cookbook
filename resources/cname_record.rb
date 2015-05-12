@@ -1,5 +1,5 @@
 # A CNAME record maps an alias to a canonical name.
-actions :create, :get_record, :get_ip, :delete
+actions :create, :get_cname_record_info, :delete
 default_action :create
 
 attribute :name, kind_of: String, required: true, name_attribute: true
