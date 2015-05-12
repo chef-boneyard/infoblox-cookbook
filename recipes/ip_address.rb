@@ -1,13 +1,6 @@
-
 infoblox_ip_address "Reserve static IP" do
   name node[:ip_address][:name]
-  ipv4addr node[:ip_address][:ipv4addr]
-  action :reserve_static_ip
-end
-
-infoblox_ip_address "Reserve static IP" do
-  name node[:ip_address][:name]
-  usage_type 'dns'
+  usage_type node[:ip_address][:usage_type]
   ipv4addr node[:ip_address][:ipv4addr]
   action :reserve_static_ip
 end
