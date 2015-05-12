@@ -2,6 +2,7 @@ infoblox_fixedaddress "Fixedaddress Create" do
   ipv4addr node[:fixedaddress][:ipv4addr]
   mac node[:fixedaddress][:mac]
   name node[:fixedaddress][:name]
+  extattrs node[:fixedaddress][:extattrs]
   action :create
 end
 
@@ -20,5 +21,6 @@ infoblox_fixedaddress "Create Fixedaddress in Network" do
   network node[:fixedaddress][:network]
   mac node[:fixedaddress][:mac]
   name node[:fixedaddress][:name]
+  extattrs node[:fixedaddress][:extattrs]
   action :create_in_network
 end

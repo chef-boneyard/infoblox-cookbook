@@ -9,7 +9,7 @@ action :create do
   request_params[:name] = new_resource.name
   request_params[:ipv4addr] = new_resource.ipv4addr
   request_params[:view] = new_resource.view unless new_resource.view.nil? 
-
+  request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   resp = create_a_record(request_params)
 end
 
@@ -21,17 +21,15 @@ action :get_record do
   begin
     record = Infoblox::Arecord.find(connection, name: request_params[:name])
     unless record.empty?
-       Chef::Log.info "Arecord information retrieved successfully"
-       record
+      Chef::Log.info "Arecord information retrieved successfully"
+      record
     else
        Chef::Log.info "Arecord information not found"
+       false
     end
   rescue Exception => e
-    unless e.message.match(/Client.Ibap.Proto/)
-      Chef::Log.error "Invalid Request"
-    else
-      raise "Something went wrong while fetching the record"
-    end
+    Chef::Log.error e.message.split("text\":")[1].chomp('}')
+    false
   end
 end
 
@@ -56,13 +54,11 @@ action :get_ip do
       ips
     else
       Chef::Log.info "A-record IP not found"
+      false
     end
   rescue Exception => e
-    unless e.message.match(/Client.Ibap.Proto/)
-      Chef::Log.error "Invalid Request"
-    else
-      raise "Something went wrong while fetching the record or record not found."
-    end
+    Chef::Log.error e.message.split("text\":")[1].chomp('}')
+    false
   end
 end
 
@@ -81,11 +77,14 @@ def delete_a_record(params)
     begin
       a_record_obj.each{ |record| record.delete }
       Chef::Log.info "Arecord(s) successfully deleted"
+      return true
     rescue Exception => e
-      Chef::Log.error e.message
+      Chef::Log.error e.message.split("text\":")[1].chomp('}')
+      return false
     end
   else
     Chef::Log.info "Arecord Not Found. Please verify IP address and hostname."
+    return false
   end
 end
 
@@ -100,14 +99,13 @@ end
 def create_a_record(params)
   record = Infoblox::Arecord.new(connection: connection, name: params[:name], ipv4addr: params[:ipv4addr])
   record.view = params[:view] if params[:view]
+  record.extattrs = params[:extattrs] if params[:extattrs]
   begin
-    record.post
+    resp = record.post
     Chef::Log.info "A-record successfully created."
+    return resp
   rescue Exception => e
-    unless e.message.match(/Client.Ibap.Data.Conflict/).nil?
-      Chef::Log.info "A-record already exists, Please select another A-record."
-    else
-      raise e.message
-    end
+    Chef::Log.error e.message.split("text\":")[1].chomp('}')
+    return false
   end
 end

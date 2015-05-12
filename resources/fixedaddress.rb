@@ -7,3 +7,6 @@ attribute :mac, kind_of: String, name_attribute: true
 attribute :ipv4addr, kind_of: String, required: true
 attribute :network, kind_of: String
 attribute :name, kind_of: String
+
+# extensible attributes
+attribute :extattrs, kind_of: Hash

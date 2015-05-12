@@ -17,4 +17,5 @@ attribute :ttl, kind_of: Integer
 attribute :use_ttl, kind_of: [ TrueClass, FalseClass ], :default => false
 attribute :comment, kind_of: String
 
-
+# extensible attributes
+attribute :extattrs, kind_of: Hash

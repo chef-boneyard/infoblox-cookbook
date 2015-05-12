@@ -1,6 +1,4 @@
 include Infoblox::Api
-require 'faraday'
-require 'net/http'
 
 action :create do
   request_params = create_network_params(new_resource)
@@ -31,6 +29,7 @@ def create_network_params(new_resource)
   request_params[:network_view] = new_resource.network_view unless new_resource.network_view.nil?
   request_params[:network_container] = new_resource.network_container unless new_resource.network_container.nil? 
   request_params[:authority] = new_resource.authority unless new_resource.authority.nil?
+  request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   return request_params
 end
 
@@ -40,15 +39,14 @@ def create_network(params)
   network_obj.network = params[:network]
   network_obj.network_view = params[:network_view] if params[:network_view]
   network_obj.network_container = params[:network_container] if params[:network_view]
+  network_obj.extattrs = params[:extattrs] if params[:extattrs]
   begin
-    network_obj.post
+    resp = network_obj.post
     Chef::Log.info "Successfully created network."
+    return resp
   rescue  Exception => e
-    unless e.message.match(/Client.Ibap.Data.Conflict/).nil?
-      Chef::Log.info "Network already exists, Please select another network."
-    else
-      raise e.message
-    end
+    Chef::Log.error e.message.split("text\":")[1].chomp('}')
+    return false
   end
 end
 
@@ -57,13 +55,16 @@ def delete_network(params)
   network_ref = Infoblox::Network.find(connection, network: params[:network])
   unless network_ref.empty?
     begin
-      network_ref.first.delete
+      resp = network_ref.first.delete
       Chef::Log.info "Netork successfully deleted"
+      return resp
     rescue Exception => e
-      Chef::Log.error e.message
+      Chef::Log.error e.message.split("text\":")[1].chomp('}')
+      return false
     end
   else
     Chef::Log.info "Netork Not Found"
+    return false
   end
 end
 
@@ -73,9 +74,10 @@ def get_network_info(params)
   network_info = network_obj.select{|n| n["network"].eql?(params[:network]) || n["_ref"].match(params[:network]) }.first
 
   unless network_info.nil?
-    network_info
     Chef::Log.info "Netork information successfully retrieved"
+    return network_info
   else
     Chef::Log.info "Netork Not Found"
+    return false
   end
 end

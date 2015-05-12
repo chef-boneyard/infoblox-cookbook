@@ -1,6 +1,7 @@
 
 infoblox_network "Create Network" do
   network node[:network][:subnet]
+  extattrs node[:network][:extattrs]
   action :create
 end
 
