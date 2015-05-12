@@ -13,10 +13,9 @@ infoblox_ip_address "Reserve static IP" do
 end
 
 infoblox_ip_address "Reserve static IP" do
-  name node[:ip_address][:ipv4addr]
-  usage_type 'fixed_address'
-  start_addr node[:ip_address][:start_addr]
-  end_addr node[:ip_address][:end_addr]
-  mac node[:ip_address][:mac]
-  action :reserve_ip_in_range
+  name node[:ip_address][:name]
+  usage_type 'dns'
+  network node[:ip_address][:network]
+  exclude node[:ip_address][:exclude]
+  action :reserve_network_ip
 end

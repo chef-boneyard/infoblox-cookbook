@@ -16,13 +16,13 @@ module Infoblox
       send("create_#{usage_type}_record", params)
     end
 
-    def get_next_ip_address(params)
+    def get_next_ip_address(params, exclude = [], num = 1)
       network_obj = Infoblox::Network.find(connection, network: params[:network])
       unless network_obj.empty?
-        ips = network_obj.first.next_available_ip
+        ips = network_obj.first.next_available_ip(num, exclude)
         if ips.nil?
           Chef::Log.info "There are no availble IP address."
-          false
+          return false
         else
           availabe_ip = ips.first
           Chef::Log.info "Next available IP  is : #{availabe_ip}" 
@@ -30,6 +30,7 @@ module Infoblox
         end
       else
         Chef::Log.info "Network not found."
+        return false
       end
     end
 
@@ -42,6 +43,8 @@ module Infoblox
     def create_host_record(params)
       record = Infoblox::Host.new(connection: connection, ipv4addrs: params[:ipv4addrs], name: params[:name])
       record.view = params[:view] if params[:view]
+      # TODO : extensible attribute value not able to insert, giving error "Invalid value for extattrs"
+      # record.extattrs = params[:extattrs] if params[:extattrs]
       begin
         record.post
         Chef::Log.info "Host record successfully created."
@@ -53,6 +56,8 @@ module Infoblox
     def create_dns_record(params)
       record = Infoblox::Arecord.new(connection: connection, name: params[:name], ipv4addr: params[:ipv4addr])
       record.view = params[:view] if params[:view]
+      # TODO : extensible attribute value not able to insert, giving error "Invalid value for extattrs"
+      # record.extattrs = params[:extattrs] if params[:extattrs]
       begin
         record.post
         Chef::Log.info "DNS Record is successfully created."
@@ -66,6 +71,8 @@ module Infoblox
       record.name = params[:name] if params[:name]
       record.view = params[:view] if params[:view]
       record.mac = params[:mac] if params[:mac]
+      # TODO : extensible attribute value not able to insert, giving error "Invalid value for extattrs"
+      # record.extattrs = params[:extattrs] if params[:extattrs]
       begin
         record.post
         Chef::Log.info "Fixed Address Record is successfully created."
