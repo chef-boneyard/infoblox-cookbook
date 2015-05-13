@@ -35,7 +35,7 @@ module Infoblox
     end
 
     def connection
-      @connection ||= Infoblox::Connection.new(username: node[:infoblox][:username], password: node[:infoblox][:password], host: node[:infoblox][:nios])
+      @connection ||= Infoblox::Connection.new(username: node["infoblox"]["username"], password: node["infoblox"]["password"], host: node["infoblox"]["nios"])
     end
 
     private

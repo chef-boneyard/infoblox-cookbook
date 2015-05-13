@@ -1,5 +1,7 @@
 include Infoblox::Api
 
+use_inline_resources
+
 action :create do
   request_params = {}
   request_params[:name] = new_resource.name

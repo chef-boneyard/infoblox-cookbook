@@ -1,5 +1,7 @@
 include Infoblox::Api
 
+use_inline_resources
+
 action :reserve_static_ip do
   # validation
   is_valid_ip?(new_resource.ipv4addr) unless new_resource.ipv4addr.nil? 

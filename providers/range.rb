@@ -1,5 +1,7 @@
 include Infoblox::Api
 
+use_inline_resources
+
 action :reserve_ip do
   request_params = {}
   request_params[:start_addr] = new_resource.start_addr

@@ -1,5 +1,7 @@
 include Infoblox::Api
 
+use_inline_resources
+
 action :create do
   # validation
   is_valid_ip?(new_resource.ipv4addr)    

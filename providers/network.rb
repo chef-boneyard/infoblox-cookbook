@@ -1,5 +1,7 @@
 include Infoblox::Api
 
+use_inline_resources
+
 action :create do
   request_params = create_network_params(new_resource)
   create_network(request_params)
