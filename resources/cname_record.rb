@@ -6,11 +6,11 @@ attribute :name, kind_of: String, required: true, name_attribute: true
 attribute :canonical, kind_of: String, required: true
 attribute :view, kind_of: String
 
-#optional attributes
+# optional attributes
 attribute :comment, kind_of: String
-attribute :disable, kind_of: [ TrueClass, FalseClass ], :default => false
+attribute :disable, kind_of: [TrueClass, FalseClass], default: false
 attribute :dns_canonical, kind_of: String
-attribute :dns_name, kind_of: String #The name for an CNAME record in punycode format.
+attribute :dns_name, kind_of: String # The name for an CNAME record in punycode format.
 
 # extensible attributes
 attribute :extattrs, kind_of: Hash

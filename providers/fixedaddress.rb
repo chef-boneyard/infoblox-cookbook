@@ -14,11 +14,11 @@ action :create do
   record.extattrs = request_param[:extattrs] if request_param[:extattrs]
   begin
     resp = record.post
-    Chef::Log.info "Fixedaddress successfully created"
+    Chef::Log.info 'Fixedaddress successfully created'
     resp
-  rescue Exception => e
-    Chef::Log.error e.message.split("text\":")[1].chomp('}')
-  end  
+  rescue StandardError => e
+    Chef::Log.error e.message.split('text\':')[1].chomp('}')
+  end
 end
 
 action :get_info do
@@ -28,16 +28,16 @@ action :get_info do
 
   begin
     unless record.nil?
-      Chef::Log.info "Fixedaddress information successfully retrived"
+      Chef::Log.info 'Fixedaddress information successfully retrived'
       record
     else
-      Chef::Log.info "Fixedaddress record not found"
+      Chef::Log.info 'Fixedaddress record not found'
       false
     end
-  rescue Exception => e
-    Chef::Log.error e.message.split("text\":")[1].chomp('}')
+  rescue StandardError => e
+    Chef::Log.error e.message.split('text\':')[1].chomp('}')
     false
-  end  
+  end
 end
 
 # Remove : fixedaddress search will be perform on the basis of ipv4addr, it will ignore mac address and name (hostname)
@@ -48,16 +48,16 @@ action :remove do
   begin
     unless record.nil?
       resp = record.delete
-      Chef::Log.info "Fixedaddress successfully deleted"
+      Chef::Log.info 'Fixedaddress successfully deleted'
       resp
     else
-      Chef::Log.info "Fixedaddress record not found"
+      Chef::Log.info 'Fixedaddress record not found'
       false
     end
-  rescue Exception => e
-    Chef::Log.error e.message.split("text\":")[1].chomp('}')
+  rescue StandardError => e
+    Chef::Log.error e.message.split('text\':')[1].chomp('}')
     false
-  end  
+  end
 end
 
 action :create_in_network do
@@ -73,10 +73,10 @@ action :create_in_network do
   record.extattrs = request_param[:extattrs] unless request_param[:extattrs].nil?
   begin
     resp = record.post
-    Chef::Log.info "Fixedaddress successfully created"
+    Chef::Log.info 'Fixedaddress successfully created'
     resp
-  rescue Exception => e
-    Chef::Log.error e.message.split("text\":")[1].chomp('}')
+  rescue StandardError => e
+    Chef::Log.error e.message.split('text\':')[1].chomp('}')
     false
-  end  
+  end
 end

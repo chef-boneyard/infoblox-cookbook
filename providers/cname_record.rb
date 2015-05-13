@@ -7,9 +7,9 @@ action :create do
   request_params[:name] = new_resource.name
   request_params[:canonical] = new_resource.canonical
   request_params[:comment] = new_resource.comment unless new_resource.comment.nil?
-  request_params[:disable] = new_resource.disable unless new_resource.disable.nil? 
+  request_params[:disable] = new_resource.disable unless new_resource.disable.nil?
   request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
-  resp = create_cname_record(request_params)
+  create_cname_record(request_params)
 end
 
 action :delete do
@@ -26,10 +26,10 @@ action :get_cname_record_info do
   record = find_cname_record(request_params)
   unless record.empty?
     resp = record.first
-    Chef::Log.info "Successfully retrived CNAME record."
+    Chef::Log.info 'Successfully retrived CNAME record.'
     return resp
   else
-    Chef::Log.info "CNAME record not found."
+    Chef::Log.info 'CNAME record not found.'
     return false
   end
 end
@@ -42,10 +42,10 @@ def create_cname_record(params)
   record.extattrs = params[:extattrs] if params[:extattrs]
   begin
     resp = record.post
-    Chef::Log.info "cname-record successfully created."
+    Chef::Log.info 'cname-record successfully created.'
     return resp
-  rescue Exception => e
-    Chef::Log.error e.message.split("text\":")[1].chomp('}')
+  rescue StandardError => e
+    Chef::Log.error e.message.split('text\':')[1].chomp('}')
     return false
   end
 end
@@ -56,14 +56,14 @@ def delete_cname_record(params)
   unless cname_record_obj.empty?
     begin
       resp = cname_record_obj.first.delete
-      Chef::Log.info "Cname Record successfully deleted"
+      Chef::Log.info 'Cname Record successfully deleted'
       return resp
-    rescue Exception => e
-      Chef::Log.error e.message.split("text\":")[1].chomp('}')
+    rescue StandardError => e
+      Chef::Log.error e.message.split('text\':')[1].chomp('}')
       return false
     end
   else
-    Chef::Log.info "Cname Record Not Found. Please verify name and canonical name."
+    Chef::Log.info 'Cname Record Not Found. Please verify name and canonical name.'
     return false
   end
 end

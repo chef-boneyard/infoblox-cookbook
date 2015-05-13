@@ -13,7 +13,7 @@ attribute :exclude, kind_of: Array
 attribute :mac, kind_of: String
 
 # To defined type of action for IP addresses
-attribute :usage_type, kind_of: String, :equal_to => ["host", "dns", "fixed_address"], default: "host"
+attribute :usage_type, kind_of: String, equal_to: %w(host dns fixed_address), default: 'host'
 
 # extensible attributes
 attribute :extattrs, kind_of: Hash
