@@ -1,5 +1,4 @@
 include Infoblox::Api
-
 use_inline_resources
 
 action :create do
@@ -17,7 +16,7 @@ action :create do
     Chef::Log.info 'Fixedaddress successfully created'
     resp
   rescue StandardError => e
-    Chef::Log.error e.message.split('text\':')[1].chomp('}')
+    Chef::Log.error get_error_message(e.message)
   end
 end
 
@@ -35,7 +34,7 @@ action :get_info do
       false
     end
   rescue StandardError => e
-    Chef::Log.error e.message.split('text\':')[1].chomp('}')
+    Chef::Log.error get_error_message(e.message)
     false
   end
 end
@@ -55,7 +54,7 @@ action :remove do
       false
     end
   rescue StandardError => e
-    Chef::Log.error e.message.split('text\':')[1].chomp('}')
+    Chef::Log.error get_error_message(e.message)
     false
   end
 end
@@ -76,7 +75,7 @@ action :create_in_network do
     Chef::Log.info 'Fixedaddress successfully created'
     resp
   rescue StandardError => e
-    Chef::Log.error e.message.split('text\':')[1].chomp('}')
+    Chef::Log.error get_error_message(e.message)
     false
   end
 end

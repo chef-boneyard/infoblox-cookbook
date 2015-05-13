@@ -1,5 +1,4 @@
 include Infoblox::Api
-
 use_inline_resources
 
 action :create do
@@ -45,9 +44,8 @@ def create_network(params)
   begin
     resp = network_obj.post
     Chef::Log.info 'Successfully created network.'
-    return resp
   rescue  StandardError => e
-    Chef::Log.error e.message.split('text\':')[1].chomp('}')
+    Chef::Log.error get_error_message(e.message)
     return false
   end
 end
@@ -61,7 +59,7 @@ def delete_network(params)
       Chef::Log.info 'Netork successfully deleted'
       return resp
     rescue StandardError => e
-      Chef::Log.error e.message.split('text\':')[1].chomp('}')
+      Chef::Log.error get_error_message(e.message)
       return false
     end
   else

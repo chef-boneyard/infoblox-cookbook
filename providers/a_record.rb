@@ -1,5 +1,4 @@
 include Infoblox::Api
-
 use_inline_resources
 
 action :create do
@@ -30,7 +29,7 @@ action :get_record do
       false
     end
   rescue StandardError => e
-    Chef::Log.error e.message.split('text\':')[1].chomp('}')
+    Chef::Log.error get_error_message(e.message)
     false
   end
 end
@@ -59,7 +58,7 @@ action :get_ip do
       false
     end
   rescue StandardError => e
-    Chef::Log.error e.message.split('text\':')[1].chomp('}')
+    Chef::Log.error get_error_message(e.message)
     false
   end
 end
@@ -81,7 +80,7 @@ def delete_a_record(params)
       Chef::Log.info 'Arecord(s) successfully deleted'
       return true
     rescue StandardError => e
-      Chef::Log.error e.message.split('text\':')[1].chomp('}')
+      Chef::Log.error get_error_message(e.message)
       return false
     end
   else
@@ -107,7 +106,7 @@ def create_a_record(params)
     Chef::Log.info 'A-record successfully created.'
     return resp
   rescue StandardError => e
-    Chef::Log.error e.message.split('text\':')[1].chomp('}')
+    Chef::Log.error get_error_message(e.message)
     return false
   end
 end

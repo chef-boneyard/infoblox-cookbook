@@ -1,5 +1,4 @@
 include Infoblox::Api
-
 use_inline_resources
 
 action :reserve_ip do

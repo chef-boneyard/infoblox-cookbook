@@ -1,5 +1,4 @@
 include Infoblox::Api
-
 use_inline_resources
 
 action :create do
@@ -27,10 +26,10 @@ action :get_cname_record_info do
   unless record.empty?
     resp = record.first
     Chef::Log.info 'Successfully retrived CNAME record.'
-    return resp
+    resp
   else
     Chef::Log.info 'CNAME record not found.'
-    return false
+    false
   end
 end
 
@@ -45,7 +44,7 @@ def create_cname_record(params)
     Chef::Log.info 'cname-record successfully created.'
     return resp
   rescue StandardError => e
-    Chef::Log.error e.message.split('text\':')[1].chomp('}')
+    Chef::Log.error get_error_message(e.message)
     return false
   end
 end
@@ -59,7 +58,7 @@ def delete_cname_record(params)
       Chef::Log.info 'Cname Record successfully deleted'
       return resp
     rescue StandardError => e
-      Chef::Log.error e.message.split('text\':')[1].chomp('}')
+      Chef::Log.error get_error_message(e.message)
       return false
     end
   else
