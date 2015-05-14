@@ -1,3 +1,6 @@
+# Cookbook Name: Infoblox
+# Recipe Name: a_record
+
 infoblox_a_record 'Create A-record' do
   ipv4addr node['a_record']['ipv4addr']
   name node['a_record']['name']

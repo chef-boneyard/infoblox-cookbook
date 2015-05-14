@@ -17,6 +17,7 @@ end
 action :get_record do
   request_params = {}
   request_params[:name] = new_resource.name
+  request_params[:ipv4addr] = new_resource.ipv4addr
   Chef::Log.info 'Action : get_record on the basis of hostname/FQDN'
 
   begin
@@ -29,7 +30,7 @@ action :get_record do
       false
     end
   rescue StandardError => e
-    Chef::Log.error get_error_message(e.message)
+    Chef::Log.error e.message
     false
   end
 end
@@ -58,7 +59,7 @@ action :get_ip do
       false
     end
   rescue StandardError => e
-    Chef::Log.error get_error_message(e.message)
+    Chef::Log.error e.message
     false
   end
 end
@@ -80,7 +81,7 @@ def delete_a_record(params)
       Chef::Log.info 'Arecord(s) successfully deleted'
       return true
     rescue StandardError => e
-      Chef::Log.error get_error_message(e.message)
+      Chef::Log.error e.message
       return false
     end
   else
@@ -106,7 +107,7 @@ def create_a_record(params)
     Chef::Log.info 'A-record successfully created.'
     return resp
   rescue StandardError => e
-    Chef::Log.error get_error_message(e.message)
+    Chef::Log.error e.message
     return false
   end
 end

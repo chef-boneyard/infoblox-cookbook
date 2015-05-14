@@ -44,7 +44,7 @@ def create_cname_record(params)
     Chef::Log.info 'cname-record successfully created.'
     return resp
   rescue StandardError => e
-    Chef::Log.error get_error_message(e.message)
+    Chef::Log.error e.message
     return false
   end
 end
@@ -58,7 +58,7 @@ def delete_cname_record(params)
       Chef::Log.info 'Cname Record successfully deleted'
       return resp
     rescue StandardError => e
-      Chef::Log.error get_error_message(e.message)
+      Chef::Log.error e.message
       return false
     end
   else

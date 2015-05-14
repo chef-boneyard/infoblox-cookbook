@@ -45,7 +45,7 @@ def create_network(params)
     resp = network_obj.post
     Chef::Log.info 'Successfully created network.'
   rescue  StandardError => e
-    Chef::Log.error get_error_message(e.message)
+    Chef::Log.error e.message
     return false
   end
 end
@@ -59,7 +59,7 @@ def delete_network(params)
       Chef::Log.info 'Netork successfully deleted'
       return resp
     rescue StandardError => e
-      Chef::Log.error get_error_message(e.message)
+      Chef::Log.error e.message
       return false
     end
   else

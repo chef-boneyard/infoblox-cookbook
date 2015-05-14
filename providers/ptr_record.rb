@@ -1,6 +1,6 @@
 include Infoblox::Api
 use_inline_resources
-require 'pry'
+
 action :create do
   # validation
   valid_ip?(new_resource.ipv4addr)
@@ -38,7 +38,7 @@ action :delete do
       Chef::Log.info 'Ptr record successfully deleted'
       resp
     rescue StandardError => e
-      Chef::Log.error get_error_message(e.message)
+      Chef::Log.error e.message
       false
     end
   else
@@ -70,7 +70,7 @@ def create_ptr_record(params)
     Chef::Log.info 'PtrRecord successfully created'
     resp
   rescue StandardError => e
-    Chef::Log.error get_error_message(e.message)
+    Chef::Log.error e.message
     false
   end  
 end

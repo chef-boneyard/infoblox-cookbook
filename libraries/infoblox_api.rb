@@ -37,10 +37,6 @@ module Infoblox
       @connection ||= Infoblox::Connection.new(username: node['infoblox']['username'], password: node['infoblox']['password'], host: node['infoblox']['nios'])
     end
 
-    def get_error_message(msg)
-      msg.split("text\":")[1].chomp('}')
-    end
-
     private
 
     def create_host_record(params)
@@ -52,7 +48,7 @@ module Infoblox
         Chef::Log.info 'Host record successfully created.'
         return resp
       rescue StandardError => e
-        Chef::Log.error get_error_message(e.message)
+        Chef::Log.error e.message
         return false
       end
     end
@@ -66,7 +62,7 @@ module Infoblox
         Chef::Log.info 'DNS Record is successfully created.'
         return resp
       rescue StandardError => e
-        Chef::Log.error get_error_message(e.message)
+        Chef::Log.error e.message
         return false
       end
     end
@@ -82,7 +78,7 @@ module Infoblox
         Chef::Log.info 'Fixed Address Record is successfully created.'
         return resp
       rescue StandardError => e
-        Chef::Log.error get_error_message(e.message)
+        Chef::Log.error e.message
         return false
       end
     end

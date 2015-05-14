@@ -1,3 +1,5 @@
+# Cookbook Name: Infoblox
+# Recipe Name: network_ip_address
 
 infoblox_ip_address 'Reserve IP in Network' do
   network node['ip_address']['network']

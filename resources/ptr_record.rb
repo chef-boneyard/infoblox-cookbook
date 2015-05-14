@@ -1,4 +1,4 @@
-actions :create, :get_record, :get_ip, :delete
+actions :create, :get_record, :delete
 default_action :create
 
 attribute :name, kind_of: String, name_attribute: true, required: true

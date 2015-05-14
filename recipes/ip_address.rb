@@ -1,3 +1,6 @@
+# Cookbook Name: Infoblox
+# Recipe Name: ip_address
+
 infoblox_ip_address 'Reserve static IP for host record' do
   name node['ip_address']['name']
   usage_type node['ip_address']['usage_type']

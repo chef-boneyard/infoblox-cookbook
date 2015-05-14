@@ -16,7 +16,7 @@ action :create do
     Chef::Log.info 'Fixedaddress successfully created'
     resp
   rescue StandardError => e
-    Chef::Log.error get_error_message(e.message)
+    Chef::Log.error e.message
   end
 end
 
@@ -34,7 +34,7 @@ action :get_info do
       false
     end
   rescue StandardError => e
-    Chef::Log.error get_error_message(e.message)
+    Chef::Log.error e.message
     false
   end
 end
@@ -54,7 +54,7 @@ action :remove do
       false
     end
   rescue StandardError => e
-    Chef::Log.error get_error_message(e.message)
+    Chef::Log.error e.message
     false
   end
 end
@@ -75,7 +75,7 @@ action :create_in_network do
     Chef::Log.info 'Fixedaddress successfully created'
     resp
   rescue StandardError => e
-    Chef::Log.error get_error_message(e.message)
+    Chef::Log.error e.message
     false
   end
 end
