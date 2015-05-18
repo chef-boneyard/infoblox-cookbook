@@ -9,16 +9,14 @@ action :reserve_ip do
   request_params[:network] = new_resource.network unless new_resource.network.nil?
 
   if ip = get_next_ip_from_range(request_params, new_resource.exclude).first
+    request_params = set_record_specific_params(new_resource)
     if new_resource.usage_type.eql?('host')
       request_params[:ipv4addrs] = [{ ipv4addr: ip, mac: new_resource.mac }]
     else
       request_params[:ipv4addr] = ip
       request_params[:mac] = new_resource.mac unless new_resource.mac.nil?
     end
-    request_params[:name] = new_resource.name
-    request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
-    request_params[:usage_type] = new_resource.usage_type
-    request(request_params[:usage_type], request_params)
+    request(request_params)
   else
     Chef::Log.info 'Next available IP not found'
     false

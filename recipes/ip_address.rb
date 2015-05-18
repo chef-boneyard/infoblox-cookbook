@@ -2,29 +2,24 @@
 # Recipe Name: ip_address
 
 infoblox_ip_address 'Reserve static IP for host record' do
-  name node['ip_address']['name']
-  usage_type node['ip_address']['usage_type']
+  name "clogeny01.test.local"
+  ptrdname node['ip_address']['ptrdname']
   ipv4addr node['ip_address']['ipv4addr']
   extattrs node['ip_address']['extattrs']
+  canonical node['ip_address']['ptrdname']
+  comment node['ip_address']['comment']
+  usage_type node['ip_address']['usage_type']
+  record_type node['ip_address']['record_type']
   action :reserve_static_ip
 end
 
 infoblox_ip_address 'Reserve static IP for DNS record' do
   name node['ip_address']['name']
-  usage_type node['ip_address']['usage_type']
   network node['ip_address']['network']
   exclude node['ip_address']['exclude']
+  ptrdname node['ip_address']['ptrdname']
   extattrs node['ip_address']['extattrs']
-  ipv4addr node['ip_address']['ipv4addr']
-  action :reserve_network_ip
-end
-
-infoblox_ip_address 'Reserve static IP for fixed_address' do
-  name node['ip_address']['name']
   usage_type node['ip_address']['usage_type']
-  network node['ip_address']['network']
-  exclude node['ip_address']['exclude']
-  extattrs node['ip_address']['extattrs']
-  ipv4addr node['ip_address']['ipv4addr']
+  record_type node['ip_address']['record_type']
   action :reserve_network_ip
 end

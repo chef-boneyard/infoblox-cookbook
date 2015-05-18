@@ -10,6 +10,7 @@ end
 
 infoblox_a_record 'Get IP A-record' do
   name node['a_record']['name']
+  ipv4addr node['a_record']['ipv4addr']
   action :get_record
 end
 

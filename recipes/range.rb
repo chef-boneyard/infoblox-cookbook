@@ -10,5 +10,8 @@ infoblox_range 'Reserve IP for fixed address record in range' do
   network node['range']['network']
   extattrs node['range']['extattrs']
   name node['range']['name']
+  canonical node['range']['canonical']
+  ptrdname node['range']['ptrdname']
+  record_type node['range']['record_type']
   action :reserve_ip
 end

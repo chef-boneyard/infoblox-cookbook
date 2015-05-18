@@ -2,35 +2,17 @@ include Infoblox::Api
 use_inline_resources
 
 action :create do
-  # validation
-  valid_ip?(new_resource.ipv4addr)
-
-  # set request params.
   request_params = create_request_params
   create_ptr_record(request_params)
 end
 
 action :get_record do
-  # validation
-  valid_ip?(new_resource.ipv4addr)
-
-  # set request params.
-  request_params = {}
-  request_params[:name] = new_resource.name unless new_resource.name.nil?
-  request_params[:ptrdname] = new_resource.ptrdname unless new_resource.ptrdname.nil?
-  request_params[:ipv4addr] = new_resource.ipv4addr unless new_resource.ipv4addr.nil?
+  request_params = create_request_params
   find_ptr_record(request_params)
 end
 
 action :delete do
-  # validation
-  valid_ip?(new_resource.ipv4addr)
-
-  # set request params.
-  request_params = {}
-  # request_params[:name] = new_resource.name unless new_resource.name.nil?
-  request_params[:ptrdname] = new_resource.ptrdname unless new_resource.ptrdname.nil?
-  request_params[:ipv4addr] = new_resource.ipv4addr unless new_resource.ipv4addr.nil?
+  request_params = create_request_params
   record = Infoblox::Ptr.find(connection, request_params)
   unless record.empty?
     begin
@@ -53,18 +35,22 @@ def create_request_params
   request_params = {}
   request_params[:name] = new_resource.name
   request_params[:ptrdname] = new_resource.ptrdname
-  request_params[:ipv4addr] = new_resource.ipv4addr
+  request_params[:ipv4addr] = new_resource.ipv4addr unless new_resource.ipv4addr.nil?
+  request_params[:ipv6addr] = new_resource.ipv6addr unless new_resource.ipv6addr.nil?
+  request_params[:comment] = new_resource.comment unless new_resource.comment.nil?
   request_params[:view] = new_resource.view unless new_resource.view.nil?
+  request_params[:zone] = new_resource.zone unless new_resource.zone.nil?
   request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   request_params
 end
 
 def create_ptr_record(params)
-  record = Infoblox::Ptr.new(connection: connection, name: params[:name])
-  record.ipv4addr = params[:ipv4addr]
-  record.extattrs = params[:extattrs]
-  record.ptrdname = params[:ptrdname]
-  record.view = params[:view]
+  record = Infoblox::Ptr.new(connection: connection, name: params[:name], ptrdname: params[:ptrdname])
+  record.ipv4addr = params[:ipv4addr] if params[:ipv4addr]
+  record.extattrs = params[:extattrs] if params[:extattrs]
+  record.comment = params[:comment] if params[:comment]
+  record.zone = params[:zone] if params[:comment]
+  record.view = params[:view] if params[:view]
   begin
     resp = record.post
     Chef::Log.info 'PtrRecord successfully created'
