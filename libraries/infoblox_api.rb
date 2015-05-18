@@ -5,7 +5,7 @@ module Infoblox
     require 'infoblox'
 
     RECORD_MAPPING = { dns: %w(A AAAA PTR CNAME) }
-    USAGE_TYPE = ['fixed_address', 'dns', 'host']
+    USAGE_TYPE = ['host', 'dns', 'fixed_address']
 
     # IP Validation.
     def valid_ip?(ipaddr)
