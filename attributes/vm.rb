@@ -1,7 +1,7 @@
 # vSphere host details
-default['vm']['host'] = '192.168.100.244'
-default['vm']['user'] = 'root'
-default['vm']['password'] = 'fr3sca@123'
+default['vm']['host'] = ''
+default['vm']['user'] = ''
+default['vm']['password'] = ''
 
 # provisioned vm details
 default['vm']['name'] = 'clogeny002'
