@@ -1,29 +1,28 @@
+#!/usr/bin/ruby
 require 'rbvmomi'
-require 'pry'
+require 'rubygems'
+require 'fog'
 
 VIM = RbVmomi::VIM
 # provision a new vm on vSphere server.
 action :provision do
-  vmFolder = dc.vmFolder
-  hosts = dc.hostFolder.children
-  rp = hosts.first.resourcePool
-  vmFolder.CreateVM_Task(:config => config_object, :pool => rp).wait_for_completion
+  clone_vm
 end
 
 # remove a vm from vSphere server.
 action :deprovision do
-  vm = dc.find_vm(new_resource.name) or fail "VM not found"
-  vm.Destroy_Task.wait_for_completion
+  connection = Fog::Compute.new(credentials)
+  connection.vm_destroy('instance_uuid' => new_resource.instance_uuid)
 end
 
 action :power_on do
-  vm = dc.find_vm(new_resource.name) or fail "VM not found"
-  vm.PowerOnVM_Task.wait_for_completion
+  connection = Fog::Compute.new(credentials)
+  connection.vm_power_on('instance_uuid' => new_resource.instance_uuid)
 end
 
 action :power_off do
-  vm = dc.find_vm(new_resource.name) or fail "VM not found"
-  vm.PowerOffVM_Task.wait_for_completion
+  connection = Fog::Compute.new(credentials)
+  connection.vm_power_off('instance_uuid' => new_resource.instance_uuid)
 end
 
 private
@@ -38,61 +37,40 @@ def dc
   @dc ||= vim.serviceInstance.find_datacenter(new_resource.datacenter) or abort "Datacenter not found"
 end
 
+def clone_vm
+  connection = Fog::Compute.new(credentials)
+  Chef::Log.info "Connected to #{connection.vsphere_server} as #{connection.vsphere_username} (API version #{connection.vsphere_rev})"
+  Chef::Log.info "Deploying new VM from template.  This may take a few minutes..."
+  new_vm = connection.vm_clone(config_options)
+end
 
-# { :adapter => VIM.CustomizationIPSettings( :ip => '10.10.70.12' ) }
+def config_options
+  {
+    'datacenter'    => new_resource.datacenter,
+    'template_path' => new_resource.template_path,
+    'power_on'      => true,
+    'datastore'     => new_resource.datastore,
+    'wait'          => true,
+    'hostname'      => new_resource.hostname,
+    'name'          => new_resource.name,
+    'customization_spec' => {
+      'domain'     => new_resource.domain,
+      'ipsettings' => {
+        'ip'      => new_resource.ip,
+        'gateway' => new_resource.gateway,
+        'subnetMask' => new_resource.subnet_mask,
+      },
+     }
+  }
+end
 
-def config_object
-  config = {
-  :name => new_resource.name,
-  :guestId => new_resource.guest_id,
-  :files => { :vmPathName => "[#{new_resource.datastore}]" },
-  :numCPUs => new_resource.num_cpus,
-  :memoryMB => new_resource.memory_mb,
-  :customization_spec => {
-	:ipsettings => {
-	  :ip => '10.10.70.3',
-	  :subnetMask => '255.255.255.0'
-	}
-  },
-  :deviceChange => 
-  [
-    {
-     :operation => :add,
-     :device => VIM.VirtualLsiLogicController(
-       :key => 1000,
-       :busNumber => 0,
-       :sharedBus => :noSharing
-     )
-   }, 
-   {
-      :operation => :add,
-      :fileOperation => :create,
-      :device => VIM.VirtualDisk(
-        :key => 0,
-        :backing => VIM.VirtualDiskFlatVer2BackingInfo(
-          :fileName => "[#{new_resource.datastore}]",
-          :diskMode => new_resource.disk_mode.to_sym,
-          :thinProvisioned => new_resource.thin_provisioned,
-        ),
-        :controllerKey => 1000,
-        :unitNumber => 0,
-        :capacityInKB => 4000000
-      )
-    }, 
-    {
-      :operation => :add,
-      :device => VIM.VirtualE1000(
-        :key => 0,
-        :deviceInfo => {
-          :label => 'Network Adapter 1',
-          :summary => new_resource.network
-        },
-        :backing => VIM.VirtualEthernetCardNetworkBackingInfo(
-          :deviceName => new_resource.network
-        ),
-        :addressType => 'generated'
-      )
-    }
-  ]
- }
+def credentials
+  {
+    :provider         => "vsphere",
+    :vsphere_username => new_resource.user,
+    :vsphere_password => new_resource.password,
+    :vsphere_server   => new_resource.host,
+    :vsphere_ssl      => true,
+    :vsphere_expected_pubkey_hash => new_resource.pubkey_hash
+  }
 end
