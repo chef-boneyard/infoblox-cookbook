@@ -20,7 +20,7 @@ infoblox_vm 'Power On a VM' do
   password node['vm']['password']
   host node['vm']['host']
   pubkey_hash node['vm']['pubkey_hash']
-  instance_uuid node['vm']['instance_uuid']
+  name node['vm']['name']
   action :power_on
 end
 
@@ -29,7 +29,8 @@ infoblox_vm 'Power Off a VM' do
   password node['vm']['password']
   host node['vm']['host']
   pubkey_hash node['vm']['pubkey_hash']
-  instance_uuid node['vm']['instance_uuid']
+  name node['vm']['name']
+  force node['vm']['force']
   action :power_off
 end
 
@@ -38,6 +39,6 @@ infoblox_vm 'Deprovision a VM' do
   password node['vm']['password']
   host node['vm']['host']
   pubkey_hash node['vm']['pubkey_hash']
-  instance_uuid node['vm']['instance_uuid']
+  name node['vm']['name']
   action :deprovision
 end
