@@ -16,7 +16,7 @@ action :reserve_ip do
       request_params[:ipv4addr] = ip
       request_params[:mac] = new_resource.mac unless new_resource.mac.nil?
     end
-    request(request_params)
+    node.override!['vcac_vm']['ip'] = ip if request(request_params)
   else
     Chef::Log.info 'Next available IP not found'
     false

@@ -1,11 +1,9 @@
 #!/usr/bin/ruby
-require 'rbvmomi'
-require 'rubygems'
 require 'fog'
 
 # provision a new vm on vSphere server.
 action :provision do
-  Chef::Log.info 'Connected to #{connection.vsphere_server} as #{connection.vsphere_username} (API version #{connection.vsphere_rev})'
+  Chef::Log.info "Connected to #{connection.vsphere_server} as #{connection.vsphere_username} (API version #{connection.vsphere_rev})"
   begin
     Chef::Log.info 'Deploying new VM from template.  This may take a few minutes...'
     connection.vm_clone(config_options)
@@ -84,7 +82,7 @@ def config_options
     'customization_spec' => {
       'domain'     => new_resource.domain,
       'ipsettings' => {
-        'ip'      => new_resource.ip,
+        'ip'      => new_resource.ip || node['vcac_vm']['ip'],
         'gateway' => new_resource.gateway,
         'subnetMask' => new_resource.subnet_mask,
       },
