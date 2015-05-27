@@ -1,3 +1,8 @@
+# Cookbook Name: Infoblox
+# Recipe Name: vm
+
+include_recipe "infoblox::default"
+
 infoblox_vm 'Provision a VM' do
   host node['vcac_vm']['host']
   user node['vcac_vm']['user']

@@ -1,6 +1,8 @@
 # Cookbook Name: Infoblox
 # Recipe Name: ip_address
 
+include_recipe "infoblox::default"
+
 infoblox_ip_address 'Reserve static IP for host record' do
   name "clogeny01.test.local"
   ptrdname node['ip_address']['ptrdname']

@@ -1,6 +1,8 @@
 # Cookbook Name: Infoblox
 # Recipe Name: ptr_record
 
+include_recipe "infoblox::default"
+
 infoblox_ptr_record "Create a ptr record" do
   name node['ptr_record']['name']
   ipv4addr node['ptr_record']['ipv4addr']

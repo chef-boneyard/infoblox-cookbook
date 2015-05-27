@@ -1,6 +1,8 @@
 # Cookbook Name: Infoblox
 # Recipe Name: reserve_ip_for_vcac_vm
 
+include_recipe "infoblox::default"
+
 infoblox_ip_address 'Reserve static IP for host record' do
   name node['vcac_vm_static_ip']['hostname']
   ipv4addr node['vcac_vm_static_ip']['ipv4addr']

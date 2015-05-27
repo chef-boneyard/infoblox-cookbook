@@ -1,9 +1,6 @@
 module Infoblox
   module Api
 
-    require 'ipaddr'
-    require 'infoblox'
-
     RECORD_MAPPING = { dns: %w(A AAAA PTR CNAME) }
     USAGE_TYPE = ['host', 'dns', 'fixed_address']
 

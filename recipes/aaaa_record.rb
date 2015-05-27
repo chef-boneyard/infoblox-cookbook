@@ -1,6 +1,8 @@
 # Cookbook Name: Infoblox
 # Recipe Name: aaaa_record
 
+include_recipe "infoblox::default"
+
 infoblox_aaaa_record 'Create AAAA-record' do
   ipv6addr node['aaaa_record']['ipv6addr']
   name node['aaaa_record']['name']

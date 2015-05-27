@@ -1,6 +1,8 @@
 # Cookbook Name: Infoblox
 # Recipe Name: cname_record
 
+include_recipe "infoblox::default"
+
 infoblox_cname_record 'Create cname-record' do
   name node['cname_record']['name']
   canonical node['cname_record']['canonical']

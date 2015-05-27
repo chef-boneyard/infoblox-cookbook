@@ -1,6 +1,8 @@
 # Cookbook Name: Infoblox
 # Recipe Name: fixedaddress
 
+include_recipe "infoblox::default"
+
 infoblox_fixedaddress 'Fixedaddress Create' do
   ipv4addr node['fixedaddress']['ipv4addr']
   mac node['fixedaddress']['mac']

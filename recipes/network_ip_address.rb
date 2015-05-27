@@ -1,6 +1,8 @@
 # Cookbook Name: Infoblox
 # Recipe Name: network_ip_address
 
+include_recipe "infoblox::default"
+
 infoblox_ip_address 'Reserve IP in Network' do
   network node['ip_address']['network']
   usage_type 'host'

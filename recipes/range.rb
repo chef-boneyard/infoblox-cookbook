@@ -1,6 +1,8 @@
 # Cookbook Name: Infoblox
 # Recipe Name: range
 
+include_recipe "infoblox::default"
+
 infoblox_range 'Reserve IP for fixed address record in range' do
   start_addr node['range']['start_addr']
   end_addr node['range']['end_addr']

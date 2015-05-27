@@ -1,6 +1,8 @@
 # Cookbook Name: Infoblox
 # Recipe Name: reserve_ip_for_vcac_vm_in_range
 
+include_recipe "infoblox::default"
+
 infoblox_range 'Reserve IP in range' do
   name node['vcac_vm_range_ip']['hostname']
   start_addr node['vcac_vm_range_ip']['start_addr']
