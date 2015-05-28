@@ -39,8 +39,8 @@ action :get_info do
   end
 end
 
-# Remove : fixedaddress search will be perform on the basis of ipv4addr, it will ignore mac address and name (hostname)
-action :remove do
+# delete : fixedaddress search will be perform on the basis of ipv4addr, it will ignore mac address and name (hostname)
+action :delete do
   request_param = {}
   request_param[:ipv4addr] = new_resource.ipv4addr
   record = Infoblox::Fixedaddress.find(connection, request_param).first

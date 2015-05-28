@@ -1,13 +1,15 @@
 # Cookbook Name: Infoblox
-# Recipe Name: remove_fixedaddress
+# Recipe Name: remove_aaaa_record
 
-infoblox_vm 'Power Off a VM' do
+include_recipe "infoblox::default"
+
+nfoblox_vm 'Power Off a VM' do
   user node['vcac_vm']['user']
   password node['vcac_vm']['password']
   host node['vcac_vm']['host']
   pubkey_hash node['vcac_vm']['pubkey_hash']
+  name node['aaaa_record']['name']
   force node['vcac_vm']['force']
-  name node['fixedaddress']['name']
   notifies :deprovision, 'infoblox_vm[Deprovision a VM]'
   action :power_off
 end
@@ -17,12 +19,12 @@ infoblox_vm 'Deprovision a VM' do
   password node['vcac_vm']['password']
   host node['vcac_vm']['host']
   pubkey_hash node['vcac_vm']['pubkey_hash']
-  name node['fixedaddress']['name']
+  name node['aaaa_record']['name']
   notifies :delete, 'infoblox_aaaa_record[Delete AAAA-record]', :immediately
-  action :deprovision
 end
 
-infoblox_fixedaddress 'Remove Fixedaddress' do
-  ipv4addr node['fixedaddress']['ipv4addr']
+infoblox_aaaa_record 'Delete AAAA-record' do
+  ipv6addr node['aaaa_record']['ipv6addr']
+  name node['aaaa_record']['vm_name']
   action :delete
 end
