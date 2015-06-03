@@ -64,7 +64,7 @@ action :create_in_network do
   request_param[:name] = new_resource.name
   request_param[:network] = new_resource.network
   request_param[:mac] = new_resource.mac unless new_resource.mac.nil?
-  request_param[:ipv4addr] = get_next_ip_address(request_param)
+  request_param[:ipv4addr] = get_next_ip_address(request_param, new_resource.exclude || [])
   request_param[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   record = Infoblox::Fixedaddress.new(connection: connection, ipv4addr: request_param[:ipv4addr])
   record.name = request_param[:name] unless request_param[:name].nil?

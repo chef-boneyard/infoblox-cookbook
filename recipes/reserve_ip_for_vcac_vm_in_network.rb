@@ -1,9 +1,7 @@
 # Cookbook Name: Infoblox
 # Recipe Name: reserve_ip_for_vcac_vm_in_network
 
-include_recipe 'infoblox::default'
-
-infoblox_ip_address 'Reserve available nextowk IP for host record' do
+infoblox_ip_address 'Reserve static IP for host record' do
   name node['vcac_vm_network_ip']['hostname']
   extattrs node['vcac_vm_network_ip']['extattrs']
   comment node['vcac_vm_network_ip']['comment']
@@ -11,7 +9,6 @@ infoblox_ip_address 'Reserve available nextowk IP for host record' do
   exclude node['vcac_vm_network_ip']['exclude']
   usage_type node['vcac_vm_network_ip']['usage_type']
   record_type node['vcac_vm_network_ip']['record_type']
-  notifies :provision, 'infoblox_vm[Provision a VM]', :immediately
   action :reserve_network_ip
 end
 

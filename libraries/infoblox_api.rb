@@ -117,7 +117,11 @@ module Infoblox
       record = Infoblox::Fixedaddress.new(connection: connection, ipv4addr: params[:ipv4addr])
       record.name = params[:name] if params[:name]
       record.view = params[:view] if params[:view]
-      record.mac = params[:mac] if params[:mac]
+      if params[:mac]
+        record.mac = params[:mac]
+      else
+        record.match_client = 'RESERVED'
+      end
       record.extattrs = params[:extattrs] if params[:extattrs]
       begin
         resp = record.post

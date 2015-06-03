@@ -5,7 +5,6 @@ include_recipe "infoblox::default"
 
 infoblox_fixedaddress 'Fixedaddress Create' do
   ipv4addr node['fixedaddress']['ipv4addr']
-  mac node['fixedaddress']['mac']
   name node['fixedaddress']['name']
   extattrs node['fixedaddress']['extattrs']
   action :create
