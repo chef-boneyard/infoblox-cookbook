@@ -28,5 +28,7 @@ infoblox_vm 'Provision a VM' do
   subnet_mask node['vcac_vm']['subnet_mask']
   hostname node['vcac_vm_network_ip']['hostname']
   name node['vcac_vm_network_ip']['name']
+  network_adapter node['vcac_vm_network_ip']['network_adapter']
+  usage_type node['vcac_vm_network_ip']['usage_type']
   action :provision
 end
