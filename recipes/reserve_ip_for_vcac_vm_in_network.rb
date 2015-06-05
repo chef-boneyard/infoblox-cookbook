@@ -30,5 +30,6 @@ infoblox_vm 'Provision a VM' do
   name node['vcac_vm_network_ip']['name']
   network_adapter node['vcac_vm_network_ip']['network_adapter']
   usage_type node['vcac_vm_network_ip']['usage_type']
+  dns_server_list node['vcac_vm']['dns_server_list']
   action :provision
 end

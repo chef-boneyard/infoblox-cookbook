@@ -18,3 +18,4 @@ attribute :pubkey_hash, kind_of: String
 attribute :force, kind_of: [TrueClass, FalseClass], default: false
 attribute :network_adapter, kind_of: String
 attribute :usage_type, kind_of: String
+attribute :dns_server_list, kind_of: Array

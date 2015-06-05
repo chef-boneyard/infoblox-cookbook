@@ -4,13 +4,6 @@ module Infoblox
     RECORD_MAPPING = { dns: %w(A AAAA PTR CNAME) }
     USAGE_TYPE = ['host', 'dns', 'fixed_address']
 
-    # IP Validation.
-    def valid_ip?(ipaddr)
-      IPAddr.new(ipaddr)
-    rescue
-      raise 'IP address is not valid.'
-    end
-
     def request(params)
       if USAGE_TYPE.include?(params[:usage_type])
         send("create_#{params[:usage_type]}_record", params)

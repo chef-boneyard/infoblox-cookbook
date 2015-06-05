@@ -11,8 +11,8 @@ default['vcac_vm_static_ip']['usage_type'] = 'dns'
 default['vcac_vm_static_ip']['record_type'] = 'A'
 
 # Reserve IP in network
-default['vcac_vm_network_ip']['name'] = 'clogeny03'
-default['vcac_vm_network_ip']['hostname'] = 'clogeny03.test.local'
+default['vcac_vm_network_ip']['name'] = 'clogeny12'
+default['vcac_vm_network_ip']['hostname'] = 'clogeny12.test.local'
 default['vcac_vm_network_ip']['mac'] = ''
 default['vcac_vm_network_ip']['network'] = '10.10.70.0/24'
 default['vcac_vm_network_ip']['exclude'] = %w(10.10.70.1 10.10.70.2)
@@ -20,8 +20,9 @@ default['vcac_vm_network_ip']['ptrdname'] = ''
 default['vcac_vm_network_ip']['canonical'] = ''
 default['vcac_vm_network_ip']['extattrs'] = { 'Site' => { 'value' => 'Test Value' } }
 default['vcac_vm_network_ip']['comment'] = 'Test Record for resere IP in network'
-default['vcac_vm_network_ip']['usage_type'] = 'dns'
+default['vcac_vm_network_ip']['usage_type'] = 'host'
 default['vcac_vm_network_ip']['record_type'] = 'A'
+default['vcac_vm_network_ip']['network_adapter'] = 'Network adapter 1'
 
 # Reserve IP in range
 default['vcac_vm_range_ip']['name'] = 'clogeny04'

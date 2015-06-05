@@ -27,5 +27,7 @@ infoblox_vm 'Provision a aCAC VM with reserved IP' do
   hostname node['vcac_vm_static_ip']['hostname']
   name node['vcac_vm_static_ip']['name']
   ip node['vcac_vm_static_ip']['ipv4addr']
+  usage_type node['vcac_vm_static_ip']['usage_type']
+  dns_server_list node['vcac_vm']['dns_server_list']
   action :provision
 end
