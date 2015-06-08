@@ -91,10 +91,11 @@ def config_options
     'customization_spec' => {
       'domain'     => new_resource.domain,
       'ipsettings' => {
-        'ip'      => new_resource.ip || node['vcac_vm']['ip'],
-        'gateway' => new_resource.gateway,
-        'subnetMask' => new_resource.subnet_mask,
-      },
+        'ip'             => new_resource.ip || node['vcac_vm']['ip'],
+        'dnsServerList'  => new_resource.dns_server_list,
+        'gateway'        => new_resource.gateway,
+        'subnetMask'     => new_resource.subnet_mask,
+      }
      }
   }
 end
