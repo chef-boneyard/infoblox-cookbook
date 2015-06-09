@@ -24,7 +24,7 @@ infoblox_vm 'Deprovision a VM' do
   action :deprovision
 end
 
-infoblox_a_record 'Delete AAAA-record' do
+infoblox_a_record 'Delete A-record' do
   name node['a_record']['name']
   ipv4addr node['a_record']['ipv4addr']
   action :delete

@@ -13,4 +13,5 @@ default['vcac_vm']['domain'] = 'test.local'
 default['vcac_vm']['gateway'] = ['10.10.70.1']
 default['vcac_vm']['subnet_mask'] = '255.255.255.0'
 default['vcac_vm']['dns_server_list'] = ['10.10.70.10']
+default['vcac_vm']['network_adapter'] = 'Network adapter 1'
 default['vcac_vm']['ip'] = ''
