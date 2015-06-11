@@ -1,9 +1,9 @@
 # Cookbook Name: Infoblox
 # Recipe Name: default
 
-%w(infoblox).each do |gem_pkg| 
+%w(fog rbvmomi infoblox).each do |gem_pkg|
   chef_gem gem_pkg do
-  	compile_time true
+    compile_time true
     action :install
   end
 end

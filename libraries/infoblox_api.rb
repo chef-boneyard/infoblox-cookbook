@@ -75,18 +75,19 @@ module Infoblox
       search_params[:name] = params[:name] if params[:name]
       search_params[:ipv4addr] = params[:ipv4addr] if params[:ipv4addr]
       search_params[:ipv6addr] = params[:ipv6addr] if params[:ipv6addr]
-      record = Infoblox::Host.find(connection, name: params[:name], ipv4addr: params[:ipv4addr])
+      record = Infoblox::Host.find(connection, search_params)
       begin
         unless record.empty?
           record.first.delete
           Chef::Log.info 'Host record successfully deleted'
+          return true
         else
           Chef::Log.info 'Host record information not found'
-          false
+          return false
         end
       rescue StandardError => e
         Chef::Log.error e.message
-        false
+        return false
       end
     end
 
@@ -100,14 +101,14 @@ module Infoblox
         unless record.nil?
           resp = record.delete
           Chef::Log.info 'Fixedaddress successfully deleted'
-          resp
+          return resp
         else
           Chef::Log.info 'Fixedaddress record not found'
-          false
+          return false
         end
       rescue StandardError => e
         Chef::Log.error e.message
-        false
+        return false
       end
     end
      
@@ -116,10 +117,10 @@ module Infoblox
       search_params = {}
       search_params[:name] = params[:name] if params[:name]
       search_params[:ipv4addr] = params[:ipv4addr] if params[:ipv4addr]
-      record = Infoblox::Arecord.find(connection, search_params)
-      unless record.empty?
+      records = Infoblox::Arecord.find(connection, search_params)
+      unless records.empty?
         begin
-          record.each { |record| record.delete }
+          records.each { |record| record.delete }
           Chef::Log.info 'Arecord(s) successfully deleted'
           return true
         rescue StandardError => e
@@ -137,10 +138,10 @@ module Infoblox
       search_params = {}
       search_params[:name] = params[:name] if params[:name]
       search_params[:ipv6addr] = params[:ipv6addr] if params[:ipv6addr]
-      record = Infoblox::AAAArecord.find(connection, search_params)
-      unless record.empty?
+      records = Infoblox::AAAArecord.find(connection, search_params)
+      unless records.empty?
         begin
-          record.each { |record| record.delete }
+          records.each { |record| record.delete }
           Chef::Log.info 'AAAA record(s) successfully deleted'
           return true
         rescue StandardError => e
@@ -158,12 +159,12 @@ module Infoblox
       search_params = {}
       search_params[:name] = params[:name] if params[:name]
       search_params[:canonical] = params[:canonical] if params[:canonical]
-      record = Infoblox::Cname.find(connection, search_params)
-      unless record.empty?
+      records = Infoblox::Cname.find(connection, search_params)
+      unless records.empty?
         begin
-          record.each { |record| record.delete }
+          records.each { |record| record.delete }
           Chef::Log.info 'Cname Record successfully deleted'
-          return resp
+          return true
         rescue StandardError => e
           Chef::Log.error e.message
           return false
@@ -179,19 +180,19 @@ module Infoblox
       search_params = {}
       search_params[:name] = params[:name] if params[:name]
       search_params[:ptrdname] = params[:ptrdname] if params[:ptrdname]
-      record = Infoblox::Ptr.find(connection, search_params)
-      unless record.empty?
+      records = Infoblox::Ptr.find(connection, search_params)
+      unless records.empty?
         begin
-          resp = record.first.delete
+          records.each { |record| record.delete }
           Chef::Log.info 'Ptr record successfully deleted'
-          resp
+          return true
         rescue StandardError => e
           Chef::Log.error e.message
-          false
+          return false
         end
       else
         Chef::Log.info 'Ptr record not Found'
-        false
+        return false
       end
     end
 

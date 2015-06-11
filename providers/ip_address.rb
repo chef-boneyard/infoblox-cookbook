@@ -48,7 +48,7 @@ def set_request_params
   # params[:comment] = new_resource.comment  unless new_resource.comment.nil?
   params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   # PTR
-  params[:ptrdname ] = new_resource.ptrdname  unless new_resource.ptrdname .nil?
+  params[:ptrdname] = new_resource.ptrdname  unless new_resource.ptrdname.nil?
   params[:view] = new_resource.view unless new_resource.view.nil?
   # CNAME
   params[:canonical] = new_resource.canonical unless new_resource.canonical.nil?

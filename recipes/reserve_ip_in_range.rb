@@ -14,7 +14,6 @@ infoblox_ip_address "Reserve Range IP" do
   name node['reserve_ip_in_range']['hostname']
   record_type node['reserve_ip_in_range']['record_type']
   ptrdname node['reserve_ip_in_range']['ptrdname']
-  ipv4addr node['reserve_ip_in_range']['ipv4addr']
   aliases node['reserve_ip_in_range']['aliases']
   action :reserve
 end
