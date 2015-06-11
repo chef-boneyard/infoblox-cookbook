@@ -13,20 +13,7 @@ end
 
 action :delete do
   request_params = create_request_params
-  record = Infoblox::Ptr.find(connection, request_params)
-  unless record.empty?
-    begin
-      resp = record.first.delete
-      Chef::Log.info 'Ptr record successfully deleted'
-      resp
-    rescue StandardError => e
-      Chef::Log.error e.message
-      false
-    end
-  else
-    Chef::Log.info 'Ptr record not Found'
-    false
-  end
+  remove_ptr_record(request_params)
 end
 
 private

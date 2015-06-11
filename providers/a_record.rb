@@ -53,7 +53,7 @@ end
 action :delete do
   Chef::Log.info 'Action : delete record on the basis of IP address.'
   request_params = get_request_params
-  delete_a_record(request_params)
+  remove_a_record(request_params)
 end
 
 private
@@ -69,24 +69,6 @@ def get_request_params
   request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   request_params[:record_ref] = new_resource.record_ref unless new_resource.record_ref.nil?
   request_params
-end
-
-# delete A-record
-def delete_a_record(params)
-  a_record_obj = Infoblox::Arecord.find(connection, params)
-  unless a_record_obj.empty?
-    begin
-      a_record_obj.each { |record| record.delete }
-      Chef::Log.info 'Arecord(s) successfully deleted'
-      return true
-    rescue StandardError => e
-      Chef::Log.error e.message
-      return false
-    end
-  else
-    Chef::Log.info 'Arecord Not Found. Please verify IP address and hostname.'
-    return false
-  end
 end
 
 def create_a_record(params)

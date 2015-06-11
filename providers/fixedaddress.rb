@@ -7,17 +7,7 @@ action :create do
   request_param[:ipv4addr] = new_resource.ipv4addr
   request_param[:mac] = new_resource.mac unless new_resource.mac.nil?
   request_param[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
-  record = Infoblox::Fixedaddress.new(connection: connection, ipv4addr: request_param[:ipv4addr])
-  record.name = request_param[:name] unless request_param[:name].nil?
-  record.mac = request_param[:mac] unless request_param[:mac].nil?
-  record.extattrs = request_param[:extattrs] if request_param[:extattrs]
-  begin
-    resp = record.post
-    Chef::Log.info 'Fixedaddress successfully created'
-    resp
-  rescue StandardError => e
-    Chef::Log.error e.message
-  end
+  create_fixedaddress_record(request_param)
 end
 
 action :get_info do
@@ -43,20 +33,7 @@ end
 action :delete do
   request_param = {}
   request_param[:ipv4addr] = new_resource.ipv4addr
-  record = Infoblox::Fixedaddress.find(connection, request_param).first
-  begin
-    unless record.nil?
-      resp = record.delete
-      Chef::Log.info 'Fixedaddress successfully deleted'
-      resp
-    else
-      Chef::Log.info 'Fixedaddress record not found'
-      false
-    end
-  rescue StandardError => e
-    Chef::Log.error e.message
-    false
-  end
+  remove_fixedaddress_record(request_param)
 end
 
 action :create_in_network do

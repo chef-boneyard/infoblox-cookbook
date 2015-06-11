@@ -1,65 +1,11 @@
 module Infoblox
   module Api
 
-    RECORD_MAPPING = { dns: %w(A AAAA PTR CNAME) }
-    USAGE_TYPE = ['host', 'dns', 'fixed_address']
-
-    def request(params)
-      if USAGE_TYPE.include?(params[:usage_type])
-        send("create_#{params[:usage_type]}_record", params)
-      else
-        Chef::Log.error "Please enter valid usage type i.e. fixed_address/host/dns"
-      end
-    end
-
-    def get_next_ip_address(params, exclude = [], num = 1)
-      network_obj = Infoblox::Network.find(connection, network: params[:network])
-      unless network_obj.empty?
-        ips = network_obj.first.next_available_ip(num, exclude)
-        if ips.nil?
-          Chef::Log.info 'No IP address available in range/network'
-          return false
-        else
-          availabe_ip = ips.first
-          Chef::Log.info "Next available IP  is : #{availabe_ip}"
-          return availabe_ip
-        end
-      else
-        Chef::Log.info 'Network not found.'
-        return false
-      end
-    end
-
     def connection
-      @connection ||= Infoblox::Connection.new(username: node['infoblox']['username'], password: node['infoblox']['password'], host: node['infoblox']['nios'])
+      @connection ||= Infoblox::Connection.new( username: node['infoblox']['username'],
+                                                password: node['infoblox']['password'],
+                                                host: node['infoblox']['nios_appliance'] )
     end
-
-    # record specific params DNS/host/fixedaddress
-    def set_record_specific_params(new_resource)
-      params = {}
-      params[:name] = new_resource.name
-      # params[:comment] = new_resource.comment  unless new_resource.comment.nil?
-      params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
-      params[:usage_type] = new_resource.usage_type
-      params[:record_type] = new_resource.record_type
-
-      if params[:usage_type].eql?('host')
-        params[:aliases] = new_resource.aliases unless new_resource.aliases.nil?
-        params[:device_description] = new_resource.device_description unless new_resource.device_description.nil?
-        params[:configure_for_dns] = new_resource.configure_for_dns unless new_resource.configure_for_dns.nil?
-      elsif params[:usage_type].eql?('fixed_address')
-        params[:network] = new_resource.network unless new_resource.network.nil?
-        params[:network_view] = new_resource.network_view unless new_resource.network_view.nil?
-      elsif params[:usage_type].eql?('dns')
-        params[:view] = new_resource.view unless new_resource.view.nil?
-        params[:canonical] = new_resource.canonical unless new_resource.canonical.nil?
-        # params[:zone] = new_resource.zone unless new_resource.zone.nil?
-        params[:ptrdname ] = new_resource.ptrdname  unless new_resource.ptrdname .nil?
-      end
-      params
-    end
-
-    private
 
     def create_host_record(params)
       record = Infoblox::Host.new(connection: connection, ipv4addrs: params[:ipv4addrs], name: params[:name])
@@ -77,36 +23,33 @@ module Infoblox
     end
 
     # create a record based on the record type A/AAAA/CNAME/PTR
-    def create_dns_record(params)
-      if RECORD_MAPPING[:dns].include?(params[:record_type])
-        if params[:record_type].eql?('A')
-          record = Infoblox::Arecord.new(connection: connection, name: params[:name], ipv4addr: params[:ipv4addr])
-        elsif params[:record_type].eql?('AAAA')
-          record = Infoblox::AAAArecord.new(connection: connection, name: params[:name], ipv6addr: params[:ipv6addr])
-        elsif params[:record_type].eql?('PTR')
-          record = Infoblox::Ptr.new(connection: connection, name: params[:name], ptrdname: params[:ptrdname])
-        elsif params[:record_type].eql?('CNAME')
-          record = Infoblox::Cname.new(connection: connection, name: params[:name], canonical: params[:canonical])
-        end
-        # record.zone = params[:zone] if params[:zone]
-        # record.comment = params[:comment] if params[:comment]
-        record.disable = params[:disable] if params[:disable]
-        record.view = params[:view] if params[:view]
-        record.extattrs = params[:extattrs] if params[:extattrs]
-        begin
-          resp = record.post
-          Chef::Log.info 'DNS Record is successfully created.'
-          return resp
-        rescue StandardError => e
-          Chef::Log.error e.message
-          return false
-        end
-      else
-        Chef::Log.error "Please enter valid record type for DNS record creation i.e. A/AAAA/PTR/CNAME"
+    def create_dns_record(params, record_type)
+      if record_type.eql?('A')
+        record = Infoblox::Arecord.new(connection: connection, name: params[:name], ipv4addr: params[:ipv4addr])
+      elsif record_type.eql?('AAAA')
+        record = Infoblox::AAAArecord.new(connection: connection, name: params[:name], ipv6addr: params[:ipv6addr])
+      elsif record_type.eql?('PTR')
+        record = Infoblox::Ptr.new(connection: connection, name: params[:name], ptrdname: params[:ptrdname])
+      elsif record_type.eql?('CNAME')
+        record = Infoblox::Cname.new(connection: connection, name: params[:name], canonical: params[:canonical])
+      end
+      # record.zone = params[:zone] if params[:zone]
+      # record.comment = params[:comment] if params[:comment]
+      record.disable = params[:disable] if params[:disable]
+      record.view = params[:view] if params[:view]
+      record.extattrs = params[:extattrs] if params[:extattrs]
+      begin
+        resp = record.post
+        Chef::Log.info "#{record_type} Record is successfully created."
+        return resp
+      rescue StandardError => e
+        Chef::Log.error e.message
+        return false
       end
     end
 
-    def create_fixed_address_record(params)
+    # create fixedaddress record
+    def create_fixedaddress_record(params)
       record = Infoblox::Fixedaddress.new(connection: connection, ipv4addr: params[:ipv4addr])
       record.name = params[:name] if params[:name]
       record.view = params[:view] if params[:view]
@@ -123,6 +66,132 @@ module Infoblox
       rescue StandardError => e
         Chef::Log.error e.message
         return false
+      end
+    end
+
+    # remove host record
+    def remove_host_record(params)
+      search_params = {}
+      search_params[:name] = params[:name] if params[:name]
+      search_params[:ipv4addr] = params[:ipv4addr] if params[:ipv4addr]
+      search_params[:ipv6addr] = params[:ipv6addr] if params[:ipv6addr]
+      record = Infoblox::Host.find(connection, name: params[:name], ipv4addr: params[:ipv4addr])
+      begin
+        unless record.empty?
+          record.first.delete
+          Chef::Log.info 'Host record successfully deleted'
+        else
+          Chef::Log.info 'Host record information not found'
+          false
+        end
+      rescue StandardError => e
+        Chef::Log.error e.message
+        false
+      end
+    end
+
+    # remove fixedaddress record
+    def remove_fixedaddress_record(params)
+      search_params = {}
+      search_params[:ipv4addr] = params[:ipv4addr] if params[:ipv4addr]
+      search_params[:ipv6addr] = params[:ipv6addr] if params[:ipv6addr]
+      record = Infoblox::Fixedaddress.find(connection, search_params).first
+      begin
+        unless record.nil?
+          resp = record.delete
+          Chef::Log.info 'Fixedaddress successfully deleted'
+          resp
+        else
+          Chef::Log.info 'Fixedaddress record not found'
+          false
+        end
+      rescue StandardError => e
+        Chef::Log.error e.message
+        false
+      end
+    end
+     
+    # remove A record
+    def remove_a_record(params)
+      search_params = {}
+      search_params[:name] = params[:name] if params[:name]
+      search_params[:ipv4addr] = params[:ipv4addr] if params[:ipv4addr]
+      record = Infoblox::Arecord.find(connection, search_params)
+      unless record.empty?
+        begin
+          record.each { |record| record.delete }
+          Chef::Log.info 'Arecord(s) successfully deleted'
+          return true
+        rescue StandardError => e
+          Chef::Log.error e.message
+          return false
+        end
+      else
+        Chef::Log.info 'Arecord Not Found. Please verify IP address and hostname.'
+        return false
+      end
+    end
+
+    # remove AAAA record
+    def remove_aaaa_record(params)
+      search_params = {}
+      search_params[:name] = params[:name] if params[:name]
+      search_params[:ipv6addr] = params[:ipv6addr] if params[:ipv6addr]
+      record = Infoblox::AAAArecord.find(connection, search_params)
+      unless record.empty?
+        begin
+          record.each { |record| record.delete }
+          Chef::Log.info 'AAAA record(s) successfully deleted'
+          return true
+        rescue StandardError => e
+          Chef::Log.error e.message
+          return false
+        end
+      else
+        Chef::Log.info 'AAAA record Not Found. Please verify IP address and hostname.'
+        return false
+      end
+    end
+
+    # remove CNAME record
+    def remove_cname_record(params)
+      search_params = {}
+      search_params[:name] = params[:name] if params[:name]
+      search_params[:canonical] = params[:canonical] if params[:canonical]
+      record = Infoblox::Cname.find(connection, search_params)
+      unless record.empty?
+        begin
+          record.each { |record| record.delete }
+          Chef::Log.info 'Cname Record successfully deleted'
+          return resp
+        rescue StandardError => e
+          Chef::Log.error e.message
+          return false
+        end
+      else
+        Chef::Log.info 'Cname Record Not Found.'
+        return false
+      end
+    end
+
+    # remove PTR record
+    def remove_ptr_record(params)
+      search_params = {}
+      search_params[:name] = params[:name] if params[:name]
+      search_params[:ptrdname] = params[:ptrdname] if params[:ptrdname]
+      record = Infoblox::Ptr.find(connection, search_params)
+      unless record.empty?
+        begin
+          resp = record.first.delete
+          Chef::Log.info 'Ptr record successfully deleted'
+          resp
+        rescue StandardError => e
+          Chef::Log.error e.message
+          false
+        end
+      else
+        Chef::Log.info 'Ptr record not Found'
+        false
       end
     end
 

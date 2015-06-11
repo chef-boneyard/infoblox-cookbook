@@ -27,28 +27,10 @@ end
 action :delete do
   Chef::Log.info 'Action : delete record on the basis of IP address.'
   request_params = get_request_params
-  delete_aaaa_record(request_params)
+  remove_aaaa_record(request_params)
 end
 
 private
-
-# delete AAAA-record
-def delete_aaaa_record(params)
-  a_record_obj = Infoblox::AAAArecord.find(connection, params)
-  unless a_record_obj.empty?
-    begin
-      a_record_obj.each { |record| record.delete }
-      Chef::Log.info 'AAAA record(s) successfully deleted'
-      return true
-    rescue StandardError => e
-      Chef::Log.error e.message
-      return false
-    end
-  else
-    Chef::Log.info 'AAAA record Not Found. Please verify IP address and hostname.'
-    return false
-  end
-end
 
 # create AAAA-record params of recipe attributes
 def get_request_params

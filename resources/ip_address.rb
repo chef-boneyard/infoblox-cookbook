@@ -1,13 +1,9 @@
-actions :reserve_static_ip, :reserve_network_ip
-default_action :reserve_static_ip
+actions :reserve, :remove
+default_action :reserve
 
 # reserve IP address
 attribute :name, kind_of: String, name_attribute: true, required: true
 attribute :ipv4addr, kind_of: String
-
-# network attributes
-attribute :network_container, kind_of: String
-attribute :exclude, kind_of: Array
 
 # host attributes 
 attribute :aliases, kind_of: Array
@@ -24,7 +20,7 @@ attribute :zone, kind_of: String
 attribute :ttl, kind_of: Integer
 attribute :use_ttl, kind_of: [TrueClass, FalseClass], default: false
 
-# fixed address attributes
+# fixedaddress/reservation attributes
 attribute :mac, kind_of: String
 attribute :network, kind_of: String
 attribute :network_view, kind_of: String
@@ -35,5 +31,4 @@ attribute :disable, kind_of: [TrueClass, FalseClass], default: false
 attribute :extattrs, kind_of: Hash
 
 # To defined type of action for IP addresses
-attribute :usage_type, kind_of: String, equal_to: %w(host dns fixed_address), default: 'host'
-attribute :record_type, kind_of: String, equal_to: %w(A AAAA PTR CNAME), default: 'A'
+attribute :record_type, kind_of: Array, default: ['host']

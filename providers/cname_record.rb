@@ -8,7 +8,7 @@ end
 
 action :delete do
   request_params = get_request_params
-  delete_cname_record(request_params)
+  remvoe_cname_record(request_params)
 end
 
 action :get_record do
@@ -49,24 +49,6 @@ def create_cname_record(params)
     return resp
   rescue StandardError => e
     Chef::Log.error e.message
-    return false
-  end
-end
-
-# delete cname-record
-def delete_cname_record(params)
-  cname_record_obj = find_cname_record(params)
-  unless cname_record_obj.empty?
-    begin
-      resp = cname_record_obj.first.delete
-      Chef::Log.info 'Cname Record successfully deleted'
-      return resp
-    rescue StandardError => e
-      Chef::Log.error e.message
-      return false
-    end
-  else
-    Chef::Log.info 'Cname Record Not Found. Please verify name and canonical name.'
     return false
   end
 end
