@@ -32,7 +32,7 @@ infoblox_vm 'Provision a aCAC VM with reserved IP' do
   record_type %w(A PTR host fixedaddress)
   dns_server_list node['vcenter']['dns_server_list']
   network_adapter node['vcenter']['network_adapter']
-  hostname node['reserve_ip_in_range']['hostname']
+  hostname node['vcenter']['hostname']
   name node['reserve_ip_in_range']['vm_name']
   action :provision
 end
