@@ -24,6 +24,8 @@ end
 # remove a vm from vSphere server.
 action :deprovision do
   begin
+    Chef::Log.info 'Waiting till the VM is powered OFF'
+    Chef::Log.info '.' while fog_connection.get_virtual_machine(new_resource.name)['power_state'] != 'poweredOff' 
     vm_info = fog_connection.get_virtual_machine(new_resource.name)
     instance_uuid = vm_info['id']
     if vm_info['power_state'].eql? 'poweredOff'

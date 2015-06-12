@@ -10,7 +10,7 @@ infoblox_next_available_ip_for_range "Find IP from Range" do
   action :find
 end
 
-infoblox_ip_address "Reserve Range IP" do
+infoblox_ip_address "Reserve IP in Range" do
   name node['reserve_ip_in_range']['hostname']
   record_type node['reserve_ip_in_range']['record_type']
   ptrdname node['reserve_ip_in_range']['ptrdname']
@@ -29,10 +29,10 @@ infoblox_vm 'Provision a aCAC VM with reserved IP' do
   domain node['vcenter']['domain']
   gateway node['vcenter']['gateway']
   subnet_mask node['vcenter']['subnet_mask']
-  record_type %w(A PTR host fixedaddress)
   dns_server_list node['vcenter']['dns_server_list']
   network_adapter node['vcenter']['network_adapter']
   hostname node['vcenter']['hostname']
+  record_type node['reserve_ip_in_range']['record_type']
   name node['reserve_ip_in_range']['vm_name']
   action :provision
 end

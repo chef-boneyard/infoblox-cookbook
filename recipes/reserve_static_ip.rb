@@ -5,10 +5,13 @@ include_recipe "infoblox::default"
 
 infoblox_ip_address "Reserve static IP" do
   name node['reserve_static_ip']['hostname']
+  ipv4addr node['reserve_static_ip']['ipv4addr']
   record_type node['reserve_static_ip']['record_type']
   ptrdname node['reserve_static_ip']['ptrdname']
-  ipv4addr node['reserve_static_ip']['ipv4addr']
   aliases node['reserve_static_ip']['aliases']
+  canonical node['reserve_static_ip']['canonical'] 
+  extattrs node['reserve_static_ip']['extattrs']
+  comment node['reserve_static_ip']['comment']
   action :reserve
 end
 
@@ -23,10 +26,11 @@ infoblox_vm 'Provision a aCAC VM with reserved IP' do
   domain node['vcenter']['domain']
   gateway node['vcenter']['gateway']
   subnet_mask node['vcenter']['subnet_mask']
-  record_type %w(A PTR host fixedaddress)
   dns_server_list node['vcenter']['dns_server_list']
   network_adapter node['vcenter']['network_adapter']
   hostname node['vcenter']['hostname']
+  
+  record_type node['reserve_static_ip']['record_type']
   name node['reserve_static_ip']['vm_name']
   ip node['reserve_static_ip']['ipv4addr']
   action :provision
