@@ -3,9 +3,9 @@ module Infoblox
 
     def connection
       creds = data_bag_item('infoblox', 'credentials')
-      @connection ||= Infoblox::Connection.new( username: creds['username'],
-                                                password: creds['password'],
-                                                host: creds['hostname'] )
+      @connection ||= Infoblox::Connection.new( username: creds['username'] || node['infoblox']['username'],
+                                                password: creds['password'] || node['infoblox']['password'],
+                                                host: creds['hostname'] || node['infoblox']['nios_appliance'] )
     end
 
     def create_host_record(params)
