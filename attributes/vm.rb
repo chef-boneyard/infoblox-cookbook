@@ -1,5 +1,4 @@
 # vcenter vm provision details
-default['vcenter']['pubkey_hash'] = '85294cb52d8a0d0c6b04d16cec3093384cde224f60f384a0847911b7ba6d2868'
 default['vcenter']['template_path'] = 'centos-65i3861'
 default['vcenter']['datacenter'] = 'Hinjewadi-DC-RM-Team'
 default['vcenter']['datastore'] = 'datastore1'

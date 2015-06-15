@@ -83,6 +83,11 @@ def fog_connection
   @fog_connection ||= Fog::Compute.new(credentials)
 end
 
+# fetch vsphere credentials from data bags
+def creds
+  @creds ||= data_bag_item('vsphere', 'credentials')
+end
+
 # VM clone configration options
 def config_options
   {
@@ -109,10 +114,10 @@ end
 def credentials
   {
     :provider         => 'vsphere',
-    :vsphere_username => new_resource.user,
-    :vsphere_password => new_resource.password,
-    :vsphere_server   => new_resource.host,
+    :vsphere_username => creds['username'],
+    :vsphere_password => creds['password'],
+    :vsphere_server   => creds['hostname'],
     :vsphere_ssl      => true,
-    :vsphere_expected_pubkey_hash => new_resource.pubkey_hash
+    :vsphere_expected_pubkey_hash => creds['pubkey_hash']
   }
 end

@@ -2,9 +2,9 @@ actions :provision, :deprovision, :power_on, :power_off
 default_action :provision
 
 # RbVmomi required fields
-attribute :host, kind_of: String, required: true
-attribute :user, kind_of: String, required: true
-attribute :password, kind_of: String, required: true
+attribute :host, kind_of: String
+attribute :user, kind_of: String
+attribute :password, kind_of: String
 attribute :name, kind_of: String
 attribute :hostname, kind_of: String
 attribute :template_path, kind_of: String
@@ -19,3 +19,4 @@ attribute :force, kind_of: [TrueClass, FalseClass], default: false
 attribute :network_adapter, kind_of: String
 attribute :record_type, kind_of: Array
 attribute :dns_server_list, kind_of: Array
+attribute :mac, kind_of: String

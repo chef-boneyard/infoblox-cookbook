@@ -2,9 +2,10 @@ module Infoblox
   module Api
 
     def connection
-      @connection ||= Infoblox::Connection.new( username: node['infoblox']['username'],
-                                                password: node['infoblox']['password'],
-                                                host: node['infoblox']['nios_appliance'] )
+      creds = data_bag_item('infoblox', 'credentials')
+      @connection ||= Infoblox::Connection.new( username: creds['username'],
+                                                password: creds['password'],
+                                                host: creds['hostname'] )
     end
 
     def create_host_record(params)
