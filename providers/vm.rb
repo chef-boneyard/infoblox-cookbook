@@ -114,10 +114,10 @@ end
 def credentials
   {
     :provider         => 'vsphere',
-    :vsphere_username => creds['username'],
-    :vsphere_password => creds['password'],
-    :vsphere_server   => creds['hostname'],
+    :vsphere_username => creds['username'] || new_resource.username,
+    :vsphere_password => creds['password'] || new_resource.password,
+    :vsphere_server   => creds['hostname'] || new_resource.host,
     :vsphere_ssl      => true,
-    :vsphere_expected_pubkey_hash => creds['pubkey_hash']
+    :vsphere_expected_pubkey_hash => creds['pubkey_hash'] || new_resource.pubkey_hash
   }
 end
