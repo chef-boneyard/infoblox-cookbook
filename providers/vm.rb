@@ -8,7 +8,11 @@ action :provision do
     Chef::Log.info 'Deploying new VM from template.  This may take a few minutes...'
     resp = fog_connection.vm_clone(config_options)
     if new_resource.record_type.include?('fixedaddress')
-      mac_address = resp['new_vm']['mac_addresses'].call[new_resource.network_adapter]
+      mac_address = unless new_resource.mac.nil? || new_resource.mac.empty?
+                      new_resource.mac
+                    else
+                      resp['new_vm']['mac_addresses'].call[new_resource.network_adapter]
+                    end
       ip = new_resource.ip || node['infoblox']['ip']
       record = Infoblox::Fixedaddress.find(connection, ipv4addr: ip).first
       record.match_client = 'MAC_ADDRESS'

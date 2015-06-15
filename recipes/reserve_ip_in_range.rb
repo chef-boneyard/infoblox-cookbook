@@ -34,5 +34,6 @@ infoblox_vm 'Provision a aCAC VM with reserved IP' do
   hostname node['vcenter']['hostname']
   record_type node['reserve_ip_in_range']['record_type']
   name node['reserve_ip_in_range']['vm_name']
+  mac node['reserve_ip_in_range']['mac']
   action :provision
 end

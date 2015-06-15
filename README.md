@@ -11,72 +11,95 @@ As an environment presetup, You need to have the following configured before usi
 1. A single vCenter server host
 2. A single vNIOS VM acting as a grid master
 3. A chef workstation setup in a VM in the network.
+4. DNS and DHCP configured/objects created in the grid master.
 
 Configuration
 -------------
 In order to communicate with the vCenter API you will have to provide your credentials in the infoblox cokkbooks attributes files.
 
 Ex: In infoblox/attributes/default.rb
-		default['infoblox']['host'] = ''
-		default['infoblox']['nios'] = ''
-		default['infoblox']['username'] = ''
-		default['infoblox']['password'] = ''
-		default['infoblox']['version'] = ''
 
-Recipe: reserve_ip_for_vcac_vm
+		default['vcenter']['vcenter_host'] = ''
+		default['vcenter']['username'] = ''
+		default['vcenter']['password'] = ''
+
+In order to communicate with the grid master you will have to provide your vNIOS credentials.
+
+		default['infoblox']['nios_appliance'] = '' # ip address of the vNIOS appliance
+		default['infoblox']['username'] = ''       # username of the vNIOS appliance
+		default['infoblox']['password'] = ''       # password of the vNIOS appliance
+
+Recipe: reserve_static_ip
 ==============================
---The following attributes are required while running reserve_ip_for_vcac_vm recipe. So provide the values in the file infoblox/attributes/vcac_vm.rb
+The following attributes are required while running reserve_static_ip recipe. So provide the values in the file infoblox/attributes/reserve_static_ip.rb
 
-		default['vcac_vm_static_ip']['name'] = 'clogeny02'
-		default['vcac_vm_static_ip']['ipv4addr'] = '10.10.70.2'
-		default['vcac_vm_static_ip']['hostname'] = 'clogeny02.poc.infobloxdemo.com'
-		default['vcac_vm_static_ip']['usage_type'] = 'dns'
-		default['vcac_vm_static_ip']['record_type'] = 'A'
+		default['reserve_static_ip']['hostname'] = 'clogeny01.qa.com'
+		default['reserve_static_ip']['ipv4addr'] = '172.26.1.52'
+		default['reserve_static_ip']['vm_name'] = 'clogeny01' # required for reserve and remove workflows
+		default['reserve_static_ip']['record_type'] = ['host']  # or %w(A PTR host fixedaddress)
+		
+	Optional Attributes:
+	  default['reserve_static_ip']['mac'] = ''
+		default['reserve_static_ip']['ptrdname'] = 'clogeny01.test.local''
+	  default['reserve_static_ip']['canonical'] = 'clogeny1.qa.com'
+		default['reserve_static_ip']['extattrs'] = { 'Site' => { 'value' => 'Test Value' } }
+		default['reserve_static_ip']['comment'] = "Test Record for Reserve Static IP workflow"
+		default['reserve_static_ip']['aliases'] = ['aliases1', 'aliases2']
+
+Recipe: reserve_ip_in_network
+=========================================
+The following attributes are required while running reserve_ip_in_network recipe. So provide the values in the file infoblox/attributes/reserve_ip_in_network.rb
+		default['reserve_ip_in_network']['network'] = '10.10.70.0/24'
+		default['reserve_ip_in_network']['record_type'] = %w(A PTR host fixedaddress)
+		default['reserve_ip_in_network']['hostname'] = 'clogeny100.test.local'
+		default['reserve_ip_in_network']['vm_name'] = 'clogeny100'
 
 	Optional Attributes:
-	  default['vcac_vm_static_ip']['mac'] = ''
-		default['vcac_vm_static_ip']['ptrdname'] = ''
-	  default['vcac_vm_static_ip']['canonical'] = ''
-		default['vcac_vm_static_ip']['extattrs'] = { 'Site' => { 'value' => 'Test Value' } }
-		default['vcac_vm_static_ip']['comment'] = 'Test record for reserve static IP'
+		default['reserve_ip_in_network']['exclude'] = %w(10.10.70.1 10.10.70.2 10.10.70.3) # ips to exclude
+		default['reserve_ip_in_network']['ptrdname'] = 'clogeny01.test.local'
+		default['reserve_ip_in_network']['aliases'] = ['aliases1', 'aliases2']
+		default['reserve_ip_in_network']['canonical'] = 'clogeny01.test.local'
+		default['reserve_ip_in_network']['comment'] = "Test Record for Reserve Static IP workflow"
+		default['reserve_ip_in_network']['extattrs'] = { 'Site' => { 'value' => 'Test Value' } }
+		default['reserve_ip_in_network']['mac'] = ''
 
-Recipe: reserve_ip_for_vcac_vm_in_network
-=========================================
---The following attributes are required while running reserve_ip_for_vcac_vm_in_network recipe. So provide the values in the file infoblox/attributes/vcac_vm.rb
-		default['vcac_vm_network_ip']['name'] = 'clogeny12'
-		default['vcac_vm_network_ip']['hostname'] = 'clogeny12.demo.com'
-		default['vcac_vm_network_ip']['mac'] = ''
-		default['vcac_vm_network_ip']['network'] = '172.26.1.0/24'
-		default['vcac_vm_network_ip']['exclude'] = %w(10.10.70.1 10.10.70.2) #provide the IPs to exclude from being available in the shown format
-		default['vcac_vm_network_ip']['ptrdname'] = '' # domain name of DNS PTR record in FQDN format. eg. clogeny.test.local
-		default['vcac_vm_network_ip']['canonical'] = '' 
-
-		default['vcac_vm_network_ip']['usage_type'] = 'host'
-		default['vcac_vm_network_ip']['record_type'] = 'A'
 	 
-Recipe: reserve_ip_for_vcac_vm_in_range
+Recipe: reserve_ip_in_range
 =========================================
---The following attributes are required while running reserve_ip_for_vcac_vm_in_range recipe. So provide the values in the file infoblox/attributes/vcac_vm.rb	 
+The following attributes are required while running reserve_ip_in_range recipe. So provide the values in the file infoblox/attributes/reserve_ip_in_range.rb	 
 
-		default['vcac_vm_range_ip']['name'] = 'clogeny13'
-		default['vcac_vm_range_ip']['hostname'] = 'clogeny13.poc.infobloxdemo.com'
-		default['vcac_vm_range_ip']['mac'] = ''
-		default['vcac_vm_range_ip']['start_addr'] = '172.26.1.1'
-		default['vcac_vm_range_ip']['end_addr'] = '172.26.1.60'
-		default['vcac_vm_range_ip']['exclude'] = ''  # provide in array as shown here  %w(172.26.1.1 172.26.1.2)
-		default['vcac_vm_range_ip']['ptrdname'] = ''
-		default['vcac_vm_range_ip']['canonical'] = ''
-		default['vcac_vm_range_ip']['usage_type'] = 'dns'
-		default['vcac_vm_range_ip']['record_type'] = 'A'
+		default['reserve_ip_in_range']['start_addr'] = '10.10.70.100'
+		default['reserve_ip_in_range']['end_addr'] = '10.10.70.220'
+		default['reserve_ip_in_range']['record_type'] = %w(A PTR host fixedaddress)
+		default['reserve_ip_in_range']['hostname'] = 'clogeny100.test.local'
+		default['reserve_ip_in_range']['vm_name'] = 'clogeny100'
 
-Recipe: remove_host_record_for_vcac_vm
+	Optional Attributes:
+		default['reserve_ip_in_range']['exclude'] = %w(10.10.70.100 10.10.70.101)
+		default['reserve_ip_in_range']['ptrdname'] = 'clogeny01.test.local'
+		default['reserve_ip_in_range']['aliases'] = ['aliases1', 'aliases2']
+		default['reserve_ip_in_range']['canonical'] = 'clogeny01.test.local'
+		default['reserve_ip_in_range']['comment'] = "Test Record for Reserve Static IP workflow"
+		default['reserve_ip_in_range']['extattrs'] = { 'Site' => { 'value' => 'Test Value' } }
+		default['reserve_ip_in_range']['mac'] = ''
+
+
+Recipe: remove_reserved_ip
 =========================================
---The following attributes are required while running remove_host_record_for_vcac_vm recipe. So provide the values in the file infoblox/attributes/vcac_vm.rb
+--The following attributes are required while running remove_reserved_ip recipe. So provide the values in the file infoblox/attributes/remove_reserved_ip.rb
 
-#TODO
+		default['remove_reserved_ip']['vm_name'] = 'clogeny01'
+		default['remove_reserved_ip']['hostname'] = 'clogeny01.demo.com'
+		default['remove_reserved_ip']['ipv4addr'] = '172.26.1.62'
+		default['remove_reserved_ip']['record_type'] = ['host'] #%w(A PTR host fixedaddress)
+
+	Optional Attributes:	
+		default['remove_reserved_ip']['ptrdname'] = 'clogeny01.test.local'
+		default['remove_reserved_ip']['canonical'] = 'clogeny1.test.local'
+		
 
 
---The following attributes are required while Creating a PTR record. So provide the values in the file infoblox/attributes/ptr_record.rb 
+The following attributes are required while Creating a PTR record. So provide the values in the file infoblox/attributes/ptr_record.rb 
 
 	- If the IP Address belongs to a reverse-mapped authoratative zone 
 		default['ptr_record']['ipv4addr'] = '' # IPv4 address eg. 10.10.70.100
