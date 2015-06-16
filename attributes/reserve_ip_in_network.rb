@@ -7,5 +7,8 @@ default['reserve_ip_in_network']['hostname'] = 'clogeny100.test.local'
 default['reserve_ip_in_network']['vm_name'] = 'clogeny100'
 default['reserve_ip_in_network']['canonical'] = 'clogeny01.test.local'
 default['reserve_ip_in_network']['mac'] = ''
+default['reserve_ip_in_range']['zone'] = 'default'
+default['reserve_ip_in_range']['view'] = 'default'
+default['reserve_ip_in_range']['disable'] = false
 default['reserve_ip_in_network']['comment'] = 'Test Record for Reserve Static IP workflow'
 default['reserve_ip_in_network']['extattrs'] = { 'Site' => { 'value' => 'Test Value' } }

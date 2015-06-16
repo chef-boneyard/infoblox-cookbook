@@ -2,7 +2,7 @@ module Infoblox
   module Api
 
     def connection
-      creds = data_bag_item('infoblox', 'credentials')
+      creds = data_bag_item('infoblox', 'credentials') rescue {}
       @connection ||= Infoblox::Connection.new( username: creds['username'] || node['infoblox']['username'],
                                                 password: creds['password'] || node['infoblox']['password'],
                                                 host: creds['hostname'] || node['infoblox']['nios_appliance'] )
@@ -12,7 +12,9 @@ module Infoblox
       record = Infoblox::Host.new(connection: connection, ipv4addrs: params[:ipv4addrs], name: params[:name])
       record.aliases = params[:aliases] if params[:aliases]
       record.view = params[:view] if params[:view]
+      record.zone = params[:zone] if params[:zone]
       record.extattrs = params[:extattrs] if params[:extattrs]
+      record.disable = params[:disable] if params[:disable]
       begin
         resp = record.post
         Chef::Log.info 'Host record successfully created.'
@@ -34,8 +36,8 @@ module Infoblox
       elsif record_type.eql?('CNAME')
         record = Infoblox::Cname.new(connection: connection, name: params[:name], canonical: params[:canonical])
       end
-      # record.zone = params[:zone] if params[:zone]
-      # record.comment = params[:comment] if params[:comment]
+      record.zone = params[:zone] if params[:zone]
+      record.comment = params[:comment] if params[:comment]
       record.disable = params[:disable] if params[:disable]
       record.view = params[:view] if params[:view]
       record.extattrs = params[:extattrs] if params[:extattrs]
@@ -53,7 +55,9 @@ module Infoblox
     def create_fixedaddress_record(params)
       record = Infoblox::Fixedaddress.new(connection: connection, ipv4addr: params[:ipv4addr])
       record.name = params[:name] if params[:name]
-      record.view = params[:view] if params[:view]
+      record.network_view = params[:network_view] if params[:network_view]
+      record.network = params[:network] if params[:network]
+      record.comment = params[:comment] if params[:comment]
       if params[:mac]
         record.mac = params[:mac]
       else

@@ -85,7 +85,7 @@ end
 
 # fetch vsphere credentials from data bags
 def creds
-  @creds ||= data_bag_item('vsphere', 'credentials')
+  @creds ||= data_bag_item('vsphere', 'credentials') rescue {}
 end
 
 # VM clone configration options
