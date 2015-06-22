@@ -119,7 +119,7 @@ module Infoblox
     # remove host record
     def remove_host_record(params)
       search_params = {}
-      search_params[:name] = params[:name].downcase! if params[:name]
+      search_params[:name] = params[:name].downcase if params[:name]
       search_params[:ipv4addr] = params[:ipv4addr] if params[:ipv4addr]
       search_params[:ipv6addr] = params[:ipv6addr] if params[:ipv6addr]
 
@@ -164,7 +164,7 @@ module Infoblox
     # remove A record
     def remove_a_record(params)
       search_params = {}
-      search_params[:name] = params[:name].downcase! if params[:name]
+      search_params[:name] = params[:name].downcase if params[:name]
       search_params[:ipv4addr] = params[:ipv4addr] if params[:ipv4addr]
 
       records = Infoblox::Arecord.find(connection, search_params)
