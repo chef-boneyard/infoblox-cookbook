@@ -45,7 +45,7 @@ def set_request_params
   params = {}
   params[:record_type] = new_resource.record_type
   params[:name] = new_resource.name
-  params[:ipv4addr] = new_resource.ipv4addr || node['vcenter']['vm']['ip']
+  params[:ipv4addr] = new_resource.ipv4addr || node['vcenter']['vm']['ipaddress']
   params[:comment] = new_resource.comment  unless new_resource.comment.nil?
   params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   params[:disable] = new_resource.disable unless new_resource.disable.nil?

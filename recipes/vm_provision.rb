@@ -18,7 +18,7 @@ with_machine_options :bootstrap_options => {
   template_name: node['vcenter']['template_name'],
   customization_spec: {
     ipsettings: {
-      ip: node['vcenter']['vm']['ip'] || node['reserve_static_ip']['ipv4addr'],
+      ip: node['vcenter']['vm']['ipaddress'] || node['reserve_static_ip']['ipv4addr'],
       dnsServerList: node['vcenter']['dns_server_list'],
       subnetMask: node['vcenter']['subnet_mask'],
       gateway: node['vcenter']['gateway']
