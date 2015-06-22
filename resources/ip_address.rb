@@ -16,7 +16,6 @@ attribute :ptrdname, kind_of: String
 attribute :ipv6addr, kind_of: String # AAAA record
 attribute :dns_name, kind_of: String # The name for an A record in punycode format.
 attribute :view, kind_of: String
-attribute :zone, kind_of: String
 attribute :ttl, kind_of: Integer
 attribute :use_ttl, kind_of: [TrueClass, FalseClass], default: false
 

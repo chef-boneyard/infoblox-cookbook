@@ -8,13 +8,53 @@ module Infoblox
                                                 host: creds['hostname'] || node['infoblox']['nios_appliance'] )
     end
 
+    # get next avaialble ip form given range.
+    def get_next_ip_from_range(start_addr, end_addr, exclude = [], num = 1)
+      params = { start_addr: start_addr, end_addr: end_addr}
+      range = Infoblox::Range.find(connection, params)
+      unless range.empty?
+        ips = range.first.next_available_ip(num, exclude)
+        if ips.nil?
+          Chef::Log.info 'No IP address available in range'
+          return false
+        else
+          availabe_ip = ips.first
+          Chef::Log.info "Next available IP  is : #{availabe_ip}"
+          return availabe_ip
+        end
+      else
+        Chef::Log.info 'Range not found.'
+        return false
+      end
+    end
+
+    # get next available ip from network
+    def get_next_ip_from_network(network, exclude = [], num = 1)
+      network_obj = Infoblox::Network.find(connection, { network: network } )
+      unless network_obj.empty?
+        ips = network_obj.first.next_available_ip(num, exclude)
+        if ips.nil?
+          Chef::Log.info 'No IP address available in network'
+          return false
+        else
+          availabe_ip = ips.first
+          Chef::Log.info "Next available IP  is : #{availabe_ip}"
+          return availabe_ip
+        end
+      else
+        Chef::Log.info 'Network not found.'
+        return false
+      end
+    end
+
     def create_host_record(params)
       record = Infoblox::Host.new(connection: connection, ipv4addrs: params[:ipv4addrs], name: params[:name])
+      record.disable = params[:disable]
       record.aliases = params[:aliases] if params[:aliases]
       record.view = params[:view] if params[:view]
-      record.zone = params[:zone] if params[:zone]
       record.extattrs = params[:extattrs] if params[:extattrs]
-      record.disable = params[:disable] if params[:disable]
+      record.comment = params[:comment] if params[:comment]
+
       begin
         resp = record.post
         Chef::Log.info 'Host record successfully created.'
@@ -36,11 +76,11 @@ module Infoblox
       elsif record_type.eql?('CNAME')
         record = Infoblox::Cname.new(connection: connection, name: params[:name], canonical: params[:canonical])
       end
-      record.zone = params[:zone] if params[:zone]
+      record.disable = params[:disable]
       record.comment = params[:comment] if params[:comment]
-      record.disable = params[:disable] if params[:disable]
       record.view = params[:view] if params[:view]
       record.extattrs = params[:extattrs] if params[:extattrs]
+
       begin
         resp = record.post
         Chef::Log.info "#{record_type} Record is successfully created."
@@ -58,12 +98,14 @@ module Infoblox
       record.network_view = params[:network_view] if params[:network_view]
       record.network = params[:network] if params[:network]
       record.comment = params[:comment] if params[:comment]
+      record.extattrs = params[:extattrs] if params[:extattrs]
+
       if params[:mac]
         record.mac = params[:mac]
       else
         record.match_client = 'RESERVED'
       end
-      record.extattrs = params[:extattrs] if params[:extattrs]
+      
       begin
         resp = record.post
         Chef::Log.info 'Fixed Address Record is successfully created.'
@@ -116,7 +158,7 @@ module Infoblox
         return false
       end
     end
-     
+
     # remove A record
     def remove_a_record(params)
       search_params = {}

@@ -13,7 +13,7 @@ action :provision do
                     else
                       resp['new_vm']['mac_addresses'].call[new_resource.network_adapter]
                     end
-      ip = new_resource.ip || node['infoblox']['ip']
+      ip = new_resource.ip || node['vcenter']['vm']['ip']
       record = Infoblox::Fixedaddress.find(connection, ipv4addr: ip).first
       record.match_client = 'MAC_ADDRESS'
       record.mac = mac_address
@@ -101,7 +101,7 @@ def config_options
     'customization_spec' => {
       'domain'     => new_resource.domain,
       'ipsettings' => {
-        'ip'             => new_resource.ip || node['infoblox']['ip'],
+        'ip'             => new_resource.ip || node['vcenter']['vm']['ip'],
         'dnsServerList'  => new_resource.dns_server_list,
         'gateway'        => new_resource.gateway,
         'subnetMask'     => new_resource.subnet_mask,

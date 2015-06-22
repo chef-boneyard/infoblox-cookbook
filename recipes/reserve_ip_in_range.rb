@@ -3,37 +3,25 @@
 
 include_recipe 'infoblox::default'
 
-infoblox_next_available_ip_for_range "Find IP from Range" do
-  start_addr node['reserve_ip_in_range']['start_addr']
-  end_addr node['reserve_ip_in_range']['end_addr']
-  exclude node['reserve_ip_in_range']['exclude']
-  action :find
-end
+extend Infoblox::Api
+next_available_ip = self.get_next_ip_from_range( node['reserve_ip_in_range']['start_addr'], node['reserve_ip_in_range']['end_addr'], node['reserve_ip_in_range']['exclude'] )
+node.set['vcenter']['vm']['ip'] = next_available_ip
 
-infoblox_ip_address "Reserve IP in Range" do
-  name node['reserve_ip_in_range']['hostname']
-  record_type node['reserve_ip_in_range']['record_type']
-  ptrdname node['reserve_ip_in_range']['ptrdname']
-  aliases node['reserve_ip_in_range']['aliases']
-  action :reserve
-end
+if next_available_ip
 
-infoblox_vm 'Provision a aCAC VM with reserved IP' do
-  host node['vcenter']['vcenter_host']
-  user node['vcenter']['username']
-  password node['vcenter']['password']
-  pubkey_hash node['vcenter']['pubkey_hash']
-  template_path node['vcenter']['template_path']
-  datacenter node['vcenter']['datacenter']
-  datastore node['vcenter']['datastore']
-  domain node['vcenter']['domain']
-  gateway node['vcenter']['gateway']
-  subnet_mask node['vcenter']['subnet_mask']
-  dns_server_list node['vcenter']['dns_server_list']
-  network_adapter node['vcenter']['network_adapter']
-  hostname node['vcenter']['hostname']
-  record_type node['reserve_ip_in_range']['record_type']
-  name node['reserve_ip_in_range']['vm_name']
-  mac node['reserve_ip_in_range']['mac']
-  action :provision
+  infoblox_ip_address "Reserve IP in Range" do
+    name node['reserve_ip_in_range']['hostname']
+    record_type node['reserve_ip_in_range']['record_type']
+    ptrdname node['reserve_ip_in_range']['ptrdname']
+    aliases node['reserve_ip_in_range']['aliases']
+    canonical node['reserve_ip_in_range']['canonical'] 
+    extattrs node['reserve_ip_in_range']['extattrs']
+    comment node['reserve_ip_in_range']['comment']
+    view node['reserve_ip_in_range']['view']
+    disable node['reserve_ip_in_range']['disable']
+    action :reserve
+  end
+
+  include_recipe "infoblox::vm_provision"
+
 end

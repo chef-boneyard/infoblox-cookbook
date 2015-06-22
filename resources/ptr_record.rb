@@ -11,7 +11,6 @@ attribute :ipv6addr, kind_of: String
 # optional attributes
 attribute :comment, kind_of: String
 attribute :disable, kind_of: [TrueClass, FalseClass], default: false
-attribute :zone, kind_of: String
 attribute :dns_name, kind_of: String # The name for an A record in punycode format.
 attribute :dns_ptrdname, kind_of: String # The domain name of the DNS PTR record in punycode format.
 attribute :view, kind_of: String

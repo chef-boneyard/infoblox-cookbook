@@ -3,24 +3,7 @@
 
 include_recipe 'infoblox::default'
 
-infoblox_vm 'Power Off a VM' do
-  user node['vcenter']['username']
-  password node['vcenter']['password']
-  host node['vcenter']['vcenter_host']
-  pubkey_hash node['vcenter']['pubkey_hash']
-  force node['vcenter']['force']
-  name node['remove_reserved_ip']['vm_name']
-  action :power_off
-end
-
-infoblox_vm 'Deprovision a VM' do
-  user node['vcenter']['username']
-  password node['vcenter']['password']
-  host node['vcenter']['vcenter_host']
-  pubkey_hash node['vcenter']['pubkey_hash']
-  name node['remove_reserved_ip']['vm_name']
-  action :deprovision
-end
+include_recipe "infoblox::vm_deprovision"
 
 infoblox_ip_address "Remove reserved IP" do
   name node['remove_reserved_ip']['hostname']

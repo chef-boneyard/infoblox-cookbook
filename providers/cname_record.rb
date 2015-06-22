@@ -31,7 +31,6 @@ def get_request_params
   request_params[:name] = new_resource.name
   request_params[:canonical] = new_resource.canonical
   request_params[:comment] = new_resource.comment unless new_resource.comment.nil?
-  request_params[:zone] = new_resource.zone unless new_resource.zone.nil?
   request_params[:disable] = new_resource.disable unless new_resource.disable.nil?
   request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   request_params

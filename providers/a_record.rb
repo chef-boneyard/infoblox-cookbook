@@ -64,7 +64,6 @@ def get_request_params
   request_params[:name] = new_resource.name
   request_params[:ipv4addr] = new_resource.ipv4addr
   request_params[:comment] = new_resource.comment unless new_resource.comment.nil?
-  request_params[:zone] = new_resource.zone unless new_resource.zone.nil?
   request_params[:view] = new_resource.view unless new_resource.view.nil?
   request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   request_params[:record_ref] = new_resource.record_ref unless new_resource.record_ref.nil?

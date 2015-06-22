@@ -5,7 +5,6 @@ default_action :create
 attribute :name, kind_of: String, required: true, name_attribute: true
 attribute :canonical, kind_of: String, required: true
 attribute :view, kind_of: String
-attribute :zone, kind_of: String
 
 # optional attributes
 attribute :comment, kind_of: String

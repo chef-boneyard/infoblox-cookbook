@@ -6,6 +6,7 @@ DNS_RECORDS = %(A AAAA PTR CNAME)
 
 action :reserve do
   request_params = set_request_params
+
   if (request_params[:record_type] - RECORD_TYPES).empty?
     request_params[:record_type].each { |record|
       if record.eql?('host')
@@ -44,12 +45,11 @@ def set_request_params
   params = {}
   params[:record_type] = new_resource.record_type
   params[:name] = new_resource.name
-  params[:ipv4addr] = new_resource.ipv4addr || node['infoblox']['ip']
+  params[:ipv4addr] = new_resource.ipv4addr || node['vcenter']['vm']['ip']
   params[:comment] = new_resource.comment  unless new_resource.comment.nil?
   params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   params[:disable] = new_resource.disable unless new_resource.disable.nil?
   params[:view] = new_resource.view unless new_resource.view.nil?
-  params[:zone] = new_resource.zone unless new_resource.zone.nil?
   # PTR
   params[:ptrdname] = new_resource.ptrdname  unless new_resource.ptrdname.nil?
   # CNAME
