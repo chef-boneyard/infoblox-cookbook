@@ -1,11 +1,16 @@
 # Cookbook Name: Infoblox
 # Recipe Name: default
 
-# %w(chef-provisioning-vsphere infoblox).each do |gem_pkg|
-#   chef_gem gem_pkg do
-#     compile_time true
-#     action :install
-#   end
-# end
+chef_gem 'chef-provisioning-vsphere' do
+  compile_time true
+  version '0.5.7'
+  action :install
+end
+
+chef_gem 'infoblox' do
+  compile_time true
+  version '0.4.1'
+  action :install
+end
 
 require 'infoblox'

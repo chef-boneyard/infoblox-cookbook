@@ -1,7 +1,7 @@
 default['range']['name'] = '' # name of record in FQDN format eg. clogeny01.test.local
 default['range']['start_addr'] = '' # IPv4 address eg. 10.10.70.100
 default['range']['end_addr'] = '' # IPv4 address eg. 10.10.70.220
-default['range']['exclude'] = [] # should be array of ip addresses eg. %w(10.10.70.100 10.10.70.107)
+default['range']['exclude'] =  %w(172.26.1.1 172.26.1.2 172.26.1.5 172.26.1.9 172.26.1.11 172.26.1.5 172.26.1.50 172.26.1.51 172.26.1.53 172.26.1.61 172.26.1.151) # should be array of ip addresses eg. %w(10.10.70.100 10.10.70.107)
 default['range']['num'] = 5
 default['range']['usage_type'] = 'host' # either of follwoing dns, host, fixed_address
 default['range']['mac'] = '' # MAC address eg. '00-0C-29-79-F7-5A'

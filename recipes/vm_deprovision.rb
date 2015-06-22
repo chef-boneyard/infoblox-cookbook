@@ -18,7 +18,6 @@ with_machine_options :bootstrap_options => {
   template_name: node['vcenter']['template_name'],
   customization_spec: {
     ipsettings: {
-      ip: node['remove_reserved_ip']['ipv4addr'],
       dnsServerList: node['vcenter']['dns_server_list'],
       subnetMask: node['vcenter']['subnet_mask'],
       gateway: node['vcenter']['gateway']
@@ -34,6 +33,6 @@ with_machine_options :bootstrap_options => {
   ssl_verify_mode: :verify_none
 }
 
-machine node['remove_reserved_ip']['vm_name'] do
+machine node['vcenter']['vm']['name'] do
   action :destroy
 end

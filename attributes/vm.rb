@@ -1,5 +1,5 @@
 # vcenter vm provision details
-default['vcenter']['template_name'] = 'IB-Ubuntu-Chef-Server-02'
+default['vcenter']['template_name'] = 'redhat'
 default['vcenter']['datacenter'] = 'IB'
 default['vcenter']['datastore'] = 'datastore1'
 default['vcenter']['domain'] = 'demo.com'
@@ -16,6 +16,6 @@ default['vcenter']['vm']['password'] = 'infoblox'
 default['vcenter']['vm']['num_cpus'] = 2
 default['vcenter']['vm']['memory_mb'] = 1024
 # vm name should be letters, numbers or hyphens in hostnames allowed eg. my-host01
-default['vcenter']['vm']['name'] = 'clogenyNetwork01'
+default['vcenter']['vm']['name'] = 'clogeny03'
 # override this attributes for next available ip in range and network.
 default['vcenter']['vm']['ip'] = nil
