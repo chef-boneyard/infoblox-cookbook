@@ -4,7 +4,7 @@
 require 'chef/provisioning/vsphere_driver'
 
 with_vsphere_driver host: node['vcenter']['vcenter_host'],
-  insecure: true,
+  insecure: node['vcenter']['insecure'],
   user:     node['vcenter']['username'],
   password: node['vcenter']['password']
 

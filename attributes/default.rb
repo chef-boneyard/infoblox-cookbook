@@ -7,3 +7,4 @@ default['infoblox']['password'] = ''       # password of the vNIOS appliance
 default['vcenter']['vcenter_host'] = '' # vCenter server host IP
 default['vcenter']['username'] = '' # vCenter server host username
 default['vcenter']['password'] = '' # vCenter server host password
+default['vcenter']['insecure'] = true

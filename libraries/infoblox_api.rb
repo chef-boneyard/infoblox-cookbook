@@ -228,7 +228,7 @@ module Infoblox
     # remove PTR record
     def remove_ptr_record(params)
       search_params = {}
-      search_params[:name] = params[:name] if params[:name]
+      search_params[:name] = params[:name].downcase if params[:name]
       search_params[:ptrdname] = params[:ptrdname] if params[:ptrdname]
       records = Infoblox::Ptr.find(connection, search_params)
       unless records.empty?
