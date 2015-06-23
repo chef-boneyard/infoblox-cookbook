@@ -8,6 +8,8 @@ infoblox_cname_record 'Create cname-record' do
   canonical node['cname_record']['canonical']
   comment node['cname_record']['comment']
   extattrs node['cname_record']['extattrs']
+  view node['cname_record']['view']
+  disable node['cname_record']['disable']
   action :create
 end
 

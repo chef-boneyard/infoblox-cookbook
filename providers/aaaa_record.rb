@@ -39,6 +39,7 @@ def get_request_params
   request_params[:ipv6addr] = new_resource.ipv6addr
   request_params[:comment] = new_resource.comment unless new_resource.comment.nil?
   request_params[:view] = new_resource.view unless new_resource.view.nil?
+  request_params[:disable] = new_resource.disable
   request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   request_params
 end
@@ -46,6 +47,8 @@ end
 def create_aaaa_record(params)
   record = Infoblox::AAAArecord.new(connection: connection, name: params[:name], ipv6addr: params[:ipv6addr])
   record.view = params[:view] if params[:view]
+  record.comment = params[:comment] if params[:comment]
+  record.disable = params[:disable]
   record.extattrs = params[:extattrs] if params[:extattrs]
   begin
     resp = record.post

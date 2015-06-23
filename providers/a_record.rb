@@ -66,6 +66,8 @@ def get_request_params
   request_params[:comment] = new_resource.comment unless new_resource.comment.nil?
   request_params[:view] = new_resource.view unless new_resource.view.nil?
   request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
+  request_params[:comment] = new_resource.comment unless new_resource.comment.nil?
+  request_params[:disable] = new_resource.disable
   request_params[:record_ref] = new_resource.record_ref unless new_resource.record_ref.nil?
   request_params
 end

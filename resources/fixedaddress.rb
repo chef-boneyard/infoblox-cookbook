@@ -1,5 +1,5 @@
 # An A (address) record maps a domain name to an IPv4 address.
-actions :create, :delete, :get_info, :create_in_network
+actions :create, :remove, :get_info
 default_action :create
 
 # Name for A record in FQDN format.
@@ -9,8 +9,5 @@ attribute :mac, kind_of: String
 attribute :network, kind_of: String
 attribute :exclude, kind_of: Array
 attribute :network_view, kind_of: String
-
-# common attributes
 attribute :comment, kind_of: String
-attribute :disable, kind_of: [TrueClass, FalseClass], default: false
 attribute :extattrs, kind_of: Hash

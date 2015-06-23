@@ -8,7 +8,7 @@ end
 
 action :delete do
   request_params = get_request_params
-  remvoe_cname_record(request_params)
+  remove_cname_record(request_params)
 end
 
 action :get_record do
@@ -31,7 +31,8 @@ def get_request_params
   request_params[:name] = new_resource.name
   request_params[:canonical] = new_resource.canonical
   request_params[:comment] = new_resource.comment unless new_resource.comment.nil?
-  request_params[:disable] = new_resource.disable unless new_resource.disable.nil?
+  request_params[:disable] = new_resource.disable
+  request_params[:view] = new_resource.view unless new_resource.view.nil?
   request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   request_params
 end
@@ -40,8 +41,9 @@ end
 def create_cname_record(params)
   record = Infoblox::Cname.new(connection: connection, name: params[:name], canonical: params[:canonical])
   record.comment = params[:comment] if params[:comment]
-  record.disable = params[:disable] if params[:disable]
+  record.disable = params[:disable]
   record.extattrs = params[:extattrs] if params[:extattrs]
+  record.view = params[:view] if params[:view]
   begin
     resp = record.post
     Chef::Log.info 'cname-record successfully created.'

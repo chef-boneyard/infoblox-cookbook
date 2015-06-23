@@ -7,6 +7,9 @@ infoblox_a_record 'Create A-record' do
   ipv4addr node['a_record']['ipv4addr']
   name node['a_record']['name']
   extattrs node['a_record']['extattrs']
+  comment node['a_record']['comment']
+  disable node['a_record']['disable']
+  view node['a_record']['view']
   action :create
 end
 

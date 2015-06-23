@@ -1,8 +1,8 @@
 include Infoblox::Api
 use_inline_resources
 
-RECORD_TYPES = %w(A AAAA PTR CNAME host fixedaddress)
-DNS_RECORDS = %(A AAAA PTR CNAME)
+RECORD_TYPES = [ 'A', 'AAAA', 'PTR', 'CNAME', 'host', 'fixedaddress' ]
+DNS_RECORDS = [ 'A', 'AAAA', 'PTR', 'CNAME' ]
 
 action :reserve do
   request_params = set_request_params
@@ -48,7 +48,7 @@ def set_request_params
   params[:ipv4addr] = new_resource.ipv4addr || node['vcenter']['vm']['ipaddress']
   params[:comment] = new_resource.comment  unless new_resource.comment.nil?
   params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
-  params[:disable] = new_resource.disable unless new_resource.disable.nil?
+  params[:disable] = new_resource.disable
   params[:view] = new_resource.view unless new_resource.view.nil?
   # PTR
   params[:ptrdname] = new_resource.ptrdname  unless new_resource.ptrdname.nil?
