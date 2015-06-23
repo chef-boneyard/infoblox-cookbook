@@ -28,19 +28,17 @@ def create_network_params(new_resource)
   request_params = {}
   request_params[:network] = new_resource.network unless new_resource.network.nil?
   request_params[:network_view] = new_resource.network_view unless new_resource.network_view.nil?
-  request_params[:network_container] = new_resource.network_container unless new_resource.network_container.nil?
-  request_params[:authority] = new_resource.authority unless new_resource.authority.nil?
+  request_params[:comment] = new_resource.comment unless new_resource.comment.nil?
   request_params[:extattrs] = new_resource.extattrs unless new_resource.extattrs.nil?
   request_params
 end
 
 # create a network using IP and CIDR
 def create_network(params)
-  network_obj = Infoblox::Network.new(connection: connection)
-  network_obj.network = params[:network]
+  network_obj = Infoblox::Network.new(connection: connection, network: params[:network])
   network_obj.network_view = params[:network_view] if params[:network_view]
-  network_obj.network_container = params[:network_container] if params[:network_view]
   network_obj.extattrs = params[:extattrs] if params[:extattrs]
+  network_obj.comment = params[:comment] if params[:comment]
   begin
     resp = network_obj.post
     Chef::Log.info 'Successfully created network.'
