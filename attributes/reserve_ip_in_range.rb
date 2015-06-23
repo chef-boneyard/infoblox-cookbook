@@ -1,7 +1,7 @@
 default['reserve_ip_in_range']['vm_name'] = 'rangeVM-2'
 default['reserve_ip_in_range']['start_addr'] = '172.26.1.1'
 default['reserve_ip_in_range']['end_addr'] = '172.26.1.60'
-default['reserve_ip_in_range']['exclude'] = %w(172.26.1.1 172.26.1.2 172.26.1.5 172.26.1.9 172.26.1.11 172.26.1.5 172.26.1.50 172.26.1.51 172.26.1.53 172.26.1.61 172.26.1.151)
+default['reserve_ip_in_range']['exclude'] = ['172.26.1.1', '172.26.1.2', '172.26.1.5', '172.26.1.9', '172.26.1.11', '172.26.1.5', '172.26.1.50', '172.26.1.51', '172.26.1.53', '172.26.1.61', '172.26.1.151' ]
 default['reserve_ip_in_range']['ptrdname'] = 'clogeny042.demo.com'
 default['reserve_ip_in_range']['aliases'] = ['clogeny0042']
 default['reserve_ip_in_range']['record_type'] = %w(fixedaddress host A PTR)
