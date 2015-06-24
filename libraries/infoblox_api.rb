@@ -207,7 +207,7 @@ module Infoblox
     # remove CNAME record
     def remove_cname_record(params)
       search_params = {}
-      search_params[:name] = params[:name] if params[:name]
+      search_params[:name] = params[:name].downcase if params[:name]
       search_params[:canonical] = params[:canonical] if params[:canonical]
       records = Infoblox::Cname.find(connection, search_params)
       unless records.empty?

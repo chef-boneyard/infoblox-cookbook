@@ -3,7 +3,8 @@
 
 include_recipe "infoblox::default"
 
-# if zone is reverse mapping than please specify the IPv4/IPv6 address otherwise specify the ptrdname for record creation, find and deletion.
+# In forward mapping zone, PTR (pointer) record maps a domain name to the other domain name.
+# In Reverse mapping zone, PTR (pointer) record maps an address to domain name.
 infoblox_ptr_record "Create a ptr record" do
   name node['ptr_record']['name']
   ptrdname node['ptr_record']['ptrdname']
