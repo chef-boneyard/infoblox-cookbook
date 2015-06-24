@@ -1,7 +1,7 @@
 Chef Guide for Infoblox Cookbook users
 ======================================
 
-Infoblox cookbook is a LWRP cookbook developed to automate the workflows that can be triggered from the vCenter Orchestator(vCO). The cookbook has recipes that can be used in a chef environment. This section describes how to use this cookbook.
+Infoblox cookbook is a LWRP cookbook developed to automate the workflows that can create NIOS records along with provisioning/deprovisioning VMs in vCenter server. The cookbook has recipes that can be used in a chef environment. This section describes how to use this cookbook.
 
 If you are new to Chef please continue reading the below section, also see the official documentation of Chef at www.chef.io.
 
@@ -41,8 +41,6 @@ Chef Workstation:
 =================
 This is the place where the chef-client will be executed. It has to be configured with the knife.rb and the pem files necessary to validate with the chef-server. Please see the chef documentation to configure the workstation.
 
-The data_bags directory contains 2 data_bag files, that contains creds for vCenter Server and vNIOS. Those 2 files has to be set first with actual creds.
-
 Once configured, the chef client can be run as below
 
 chef-client -r infoblox::reserve_static_ip
@@ -53,10 +51,10 @@ chef-client -z -r infoblox::reserve_static_ip
 
 Infoblox cookbook Details:
 ==========================
-The Infoblox cookbook wraps the public APIs available in the "infoblox" gem and is capable of performing the same functions/workflows as the current VMware vRealize Orchestrator adapter. Specifically it does the VM provisioning and de-provisioning operations of vCenter and allows DHCP and DNS configuration to be provided from a centrally managed Infoblox appliance.
+The Infoblox cookbook wraps the public APIs available in the "infoblox" gem. Specifically it does the VM provisioning and de-provisioning operations of vCenter and allows DHCP and DNS configuration to be provided from a centrally managed Infoblox appliance.
 
 The basic motive behind writing the cookbook were as follows:
-1. To create a Chef pathway that will allow the vRealize Orchestrator workflows to be executed.
+1. To create a Chef pathway that will allow the workflows to be executed.
 2. VMs to be provisioned/de-provisioned in the vCenter server.
 3. The vNIOS Infoblox appliance to have the necessary network objects created and configured.
 
