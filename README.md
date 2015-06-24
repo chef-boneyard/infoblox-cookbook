@@ -13,9 +13,10 @@ Configure your Chef workstation setup. The cookbook is tested against Chef versi
 
 In all of the above cases, it will run the workflows and create records and VMs.
 
-As an environment presetup, You need to have the following configured before using this cookbook. 
-1. A single vCenter server host
-2. A single vNIOS VM acting as a grid master
+As an environment presetup, You need to have the following configured before using this cookbook.
+
+1. A single vCenter server host.
+2. A single vNIOS VM acting as a grid master.
 3. A chef workstation setup in a VM in the network.
 4. DNS and DHCP configured/objects created in the grid master.
 
