@@ -1,7 +1,7 @@
 Infoblox
 =========
 
-The Infoblox cookbook wraps the public APIs available in the "infoblox" gem and is capable of performing functions related to provisioning and de-provisioning vCenter server VMs. It also allows DHCP and DNS configuration to be provided from a centrally managed Infoblox appliance.
+The Infoblox cookbook wraps the public APIs available in the "infoblox" gem and is capable of performing functions related to provisioning and de-provisioning vCenter server VMs. It also allows DHCP and DNS configuration to be provided from a centrally managed Infoblox appliance. The motive behind the cookbook was the integration of the DDI (DNS, DHCP and IPAM) with the virtual/Cloud provisioning. Currently it is integrated with vSphere. In future it will be available for EC2, openstack and more.
 
 Prerequisites
 -------------
