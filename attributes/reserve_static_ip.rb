@@ -1,3 +1,10 @@
+#
+# Author:: Prabhu Das (<prabhu.das@clogeny.com>)
+# Author:: Ramesh Sencha (<ramesh.sencha@clogeny.com>)
+# Copyright:: Infoblox
+# Maintainer:: Infoblox
+# License:: Apache License, Version 2.0
+#
 default['reserve_static_ip']['vm_name'] = 'staticVM-1'
 default['reserve_static_ip']['ipv4addr'] = '172.26.1.101'
 default['reserve_static_ip']['ptrdname'] = 'clogeny101.demo.com'

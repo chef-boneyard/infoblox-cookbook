@@ -1,3 +1,10 @@
+#
+# Author:: Prabhu Das (<prabhu.das@clogeny.com>)
+# Author:: Ramesh Sencha (<ramesh.sencha@clogeny.com>)
+# Copyright:: Infoblox
+# Maintainer:: Infoblox
+# License:: Apache License, Version 2.0
+#
 default['reserve_ip_in_network']['vm_name'] = 'networkVM-1'
 default['reserve_ip_in_network']['network'] = '172.26.1.0/24'
 default['reserve_ip_in_network']['exclude'] =  ['172.26.1.1', '172.26.1.2', '172.26.1.5', '172.26.1.9', '172.26.1.11', '172.26.1.5', '172.26.1.50', '172.26.1.51', '172.26.1.53', '172.26.1.61', '172.26.1.151' ]

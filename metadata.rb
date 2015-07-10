@@ -1,6 +1,6 @@
 name             'infoblox'
-maintainer       'Clogeny Technologies'
-maintainer_email 'clogeny.com'
+maintainer       'Infoblox'
+maintainer_email 'prabhu.das@clogeny.com,ramesh.sencha@clogeny.com'
 license          'All rights reserved'
 description      'LWRP for automating vRealize Orchestrator workflows.'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))

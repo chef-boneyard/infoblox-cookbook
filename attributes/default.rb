@@ -1,3 +1,10 @@
+#
+# Author:: Prabhu Das (<prabhu.das@clogeny.com>)
+# Author:: Ramesh Sencha (<ramesh.sencha@clogeny.com>)
+# Copyright:: Infoblox
+# Maintainer:: Infoblox
+# License:: Apache License, Version 2.0
+#
 # NIOS host details
 default['infoblox']['nios_appliance'] = '' # ip address of the vNIOS appliance
 default['infoblox']['username'] = ''       # username of the vNIOS appliance

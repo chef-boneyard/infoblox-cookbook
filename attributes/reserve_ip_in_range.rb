@@ -1,3 +1,10 @@
+#
+# Author:: Prabhu Das (<prabhu.das@clogeny.com>)
+# Author:: Ramesh Sencha (<ramesh.sencha@clogeny.com>)
+# Copyright:: Infoblox
+# Maintainer:: Infoblox
+# License:: Apache License, Version 2.0
+#
 default['reserve_ip_in_range']['vm_name'] = 'rangeVM-2'
 default['reserve_ip_in_range']['start_addr'] = '172.26.1.1'
 default['reserve_ip_in_range']['end_addr'] = '172.26.1.60'

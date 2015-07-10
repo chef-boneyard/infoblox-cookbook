@@ -1,3 +1,10 @@
+#
+# Author:: Prabhu Das (<prabhu.das@clogeny.com>)
+# Author:: Ramesh Sencha (<ramesh.sencha@clogeny.com>)
+# Copyright:: Infoblox
+# Maintainer:: Infoblox
+# License:: Apache License, Version 2.0
+#
 default['range']['name'] = '' # name of record in FQDN format eg. clogeny01.test.local
 default['range']['start_addr'] = '' # IPv4 address eg. 10.10.70.100
 default['range']['end_addr'] = '' # IPv4 address eg. 10.10.70.220
