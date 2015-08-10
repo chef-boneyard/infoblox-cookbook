@@ -159,6 +159,18 @@ The following attributes are required while Creating a PTR record. So provide th
 	  default['ptr_record']['view'] = 'default' # name of DNS view in which record resides.
     default['ptr_record']['extattrs'] = {}
 
+Support
+=======
+
+This cookbook is a joint effort between Chef and Infoblox.
+
+Chef customers experiencing a technical issue with this cookbook should open a support ticket for assistance.  All other users should feel free to log a GitHub issue in this repository.
+
+For non-technical inquiries regarding this cookbook, please log a GitHub issue, or send an email to one of the following addresses:
+
+ * Chef: partnereng@chef.io
+ * Infoblox: chef-support@infoblox.com
+
 
 License
 =======
@@ -178,6 +190,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 either express or implied. See the License for the specific language governing permissions
 and limitations under the License.
+
 
 Contributing
 ============
