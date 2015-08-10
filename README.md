@@ -1,4 +1,4 @@
-Infoblox
+Infoblox Cookbook
 =========
 
 The Infoblox cookbook wraps the public APIs available in the "infoblox" gem and is capable of performing functions related to provisioning and de-provisioning vCenter server VMs. It also allows DHCP and DNS configuration to be provided from a centrally managed Infoblox appliance. The motive behind the cookbook was the integration of the DDI (DNS, DHCP and IPAM) with the virtual/Cloud provisioning. Currently it is integrated with vSphere. In future it will be available for EC2, openstack and more.
@@ -9,7 +9,7 @@ Configure your Chef workstation setup. The cookbook is tested against Chef versi
 
 1. Hosted chef
 2. Private chef-server
-3. Chef-zero, without having an actual chef server configured. 
+3. Chef-zero, without having an actual chef server configured.
 
 In all of the above cases, it will run the workflows and create records and VMs.
 
@@ -74,7 +74,7 @@ The following attributes are required while running reserve_static_ip recipe. So
 		default['reserve_static_ip']['vm_name'] = 'staticVM-3'  # required for reserve and remove workflows
 		default['reserve_static_ip']['ipv4addr'] = '172.26.1.52'
 		default['reserve_static_ip']['record_type'] = ['host']  # or %w(A PTR host fixedaddress)
-		
+
 	Optional Attributes:
 	    default['reserve_static_ip']['mac'] = ''
 	    default['reserve_static_ip']['view'] = 'default'
@@ -88,7 +88,7 @@ The following attributes are required while running reserve_static_ip recipe. So
 Recipe: reserve_ip_in_network
 =========================================
 The following attributes are required while running reserve_ip_in_network recipe. So provide the values in the file infoblox/attributes/reserve_ip_in_network.rb
-		
+
 		default['reserve_ip_in_network']['vm_name'] = 'networkVM-3'
 		default['reserve_ip_in_network']['network'] = '10.10.70.0/24'
 		default['reserve_ip_in_network']['record_type'] = ['A', 'PTR', 'host', 'fixedaddress']
@@ -107,13 +107,13 @@ The following attributes are required while running reserve_ip_in_network recipe
 
 Recipe: reserve_ip_in_range
 =========================================
-The following attributes are required while running reserve_ip_in_range recipe. So provide the values in the file infoblox/attributes/reserve_ip_in_range.rb	 
+The following attributes are required while running reserve_ip_in_range recipe. So provide the values in the file infoblox/attributes/reserve_ip_in_range.rb
 
 		default['reserve_ip_in_range']['vm_name'] = 'rangeVM-3'
 		default['reserve_ip_in_range']['start_addr'] = '10.10.70.100'
 		default['reserve_ip_in_range']['end_addr'] = '10.10.70.220'
 		default['reserve_ip_in_range']['record_type'] = ['A', 'PTR', 'host', 'fixedaddress']
-		
+
 
 	Optional Attributes:
 		default['reserve_ip_in_range']['exclude'] = ['10.10.70.100', '10.10.70.101']
@@ -135,26 +135,55 @@ Recipe: remove_reserved_ip
 		default['remove_reserved_ip']['ipv4addr'] = '172.26.1.62'
 		default['remove_reserved_ip']['record_type'] = ['host'] # %w(A PTR host fixedaddress)
 
-	Optional Attributes:	
+	Optional Attributes:
 		default['remove_reserved_ip']['ptrdname'] = 'clogeny01.test.local'
 		default['remove_reserved_ip']['canonical'] = 'clogeny1.test.local'
-		
+
 
 Creating A specific Record without provisioning VM
 --------------------------------------------------
 
 Here we show only for PTR record. Other records can be created just by setting their attribute values and running their recipes.
 
-The following attributes are required while Creating a PTR record. So provide the values in the file infoblox/attributes/ptr_record.rb 
+The following attributes are required while Creating a PTR record. So provide the values in the file infoblox/attributes/ptr_record.rb
 
-	- If the IP Address belongs to a reverse-mapped authoratative zone 
+	- If the IP Address belongs to a reverse-mapped authoratative zone
 		default['ptr_record']['ipv4addr'] = '' # IPv4 address eg. 10.10.70.100
 		default['ptr_record']['ptrdname'] = '' # domain name of DNS PTR record in FQDN format. eg. clogeny.test.local
 
-	- If the IP doesn't belong to a reverse-mapped authoratative zone 
+	- If the IP doesn't belong to a reverse-mapped authoratative zone
 		default['ptr_record']['name'] = '' # name of record in FQDN format eg. infoblox01.test.local
 		default['ptr_record']['ptrdname'] = '' # domain name of DNS PTR record in FQDN format. eg. clogeny.test.local
 
 	Optional Attributes:
 	  default['ptr_record']['view'] = 'default' # name of DNS view in which record resides.
     default['ptr_record']['extattrs'] = {}
+
+
+License
+=======
+
+Copyright:: Copyright (c) 2015 Chef Software, Inc.
+
+License:: Apache License, Version 2.0
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the License at
+
+```
+http://www.apache.org/licenses/LICENSE-2.0
+```
+
+Unless required by applicable law or agreed to in writing, software distributed under the
+License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+either express or implied. See the License for the specific language governing permissions
+and limitations under the License.
+
+Contributing
+============
+
+1. Fork it ( https://github.com/chef-partners/infoblox-cookbook/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
