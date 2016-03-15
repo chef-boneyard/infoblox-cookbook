@@ -3,6 +3,10 @@ infoblox CHANGELOG
 
 This file is used to list changes made in each version of the infoblox cookbook.
 
+1.0.x
+-----
+- [James Johnson] - Raise exceptions on failure in infoblox_api.rb so that converge will be stopped.
+
 0.1.0
 -----
 - [your_name] - Initial release of infoblox
