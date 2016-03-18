@@ -15,3 +15,6 @@ default['vcenter']['vcenter_host'] = '' # vCenter server host IP
 default['vcenter']['username'] = '' # vCenter server host username
 default['vcenter']['password'] = '' # vCenter server host password
 default['vcenter']['insecure'] = true
+
+default['infoblox']['data_bag_name'] = 'infoblox'
+default['infoblox']['data_bag_item'] = 'credentials'

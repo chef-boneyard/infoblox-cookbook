@@ -5,11 +5,12 @@
 # Maintainer:: Infoblox
 # License:: Apache License, Version 2.0
 #
+
 module Infoblox
   module Api
 
     def connection
-      creds = data_bag_item('infoblox', 'credentials') rescue {}
+      creds = data_bag_item(node['infoblox']['data_bag_name'], node['infoblox']['data_bag_item']) rescue {}
       @connection ||= Infoblox::Connection.new( username: creds['username'] || node['infoblox']['username'],
                                                 password: creds['password'] || node['infoblox']['password'],
                                                 host: creds['hostname'] || node['infoblox']['nios_appliance'] )
@@ -53,7 +54,7 @@ module Infoblox
       record.disable = params[:disable]
       record.aliases = params[:aliases] if params[:aliases]
       record.view = params[:view] if params[:view]
-      record.extattrs = params[:extattrs] if params[:extattrs]
+      record.extensible_attributes = params[:extattrs] if params[:extattrs]
       record.comment = params[:comment] if params[:comment]
 
       resp = record.post
@@ -75,7 +76,7 @@ module Infoblox
       record.disable = params[:disable]
       record.comment = params[:comment] if params[:comment]
       record.view = params[:view] if params[:view]
-      record.extattrs = params[:extattrs] if params[:extattrs]
+      record.extensible_attributes = params[:extattrs] if params[:extattrs]
 
       resp = record.post
       Chef::Log.info "#{record_type} Record is successfully created."
@@ -89,7 +90,7 @@ module Infoblox
       record.network_view = params[:network_view] if params[:network_view]
       record.network = params[:network] if params[:network]
       record.comment = params[:comment] if params[:comment]
-      record.extattrs = params[:extattrs] if params[:extattrs]
+      record.extensible_attributes = params[:extattrs] if params[:extattrs]
 
       if params[:mac]
         record.mac = params[:mac]
@@ -100,6 +101,20 @@ module Infoblox
       resp = record.post
       Chef::Log.info 'Fixed Address Record is successfully created.'
       return resp
+    end
+
+    # create or update host record
+    def create_or_update_host_record(params)
+      search_params = {}
+      search_params[:name] = params[:name].downcase if params[:name]
+
+      record = Infoblox::Host.find(connection, search_params)
+      if record.empty?
+        create_host_record(params)
+      else
+        update_host_record(params, record)
+      end
+      true
     end
 
     # remove host record
@@ -190,5 +205,54 @@ module Infoblox
       raise 'Ptr record not Found'
     end
 
+    def update_host_record(params, record=nil)
+      search_params = {}
+      search_params[:name] = params[:name].downcase if params[:name]
+
+      record = Infoblox::Host.find(connection, search_params) unless record
+
+      host = record.first
+
+      # Remove any existing Infoblox::HostIpv4addr
+      host.ipv4addrs.clear if params[:replace_ipv4addrs]
+
+      params.each do |key, value|
+        case key
+
+        when :replace_ipv4addrs
+          # Already handled
+
+        when :extattrs
+          host.extensible_attributes = value
+
+        when :ipv4addrs
+          # ipv4addrs requires a bit of special effort
+          value = params[:ipv4addrs].first
+          ipv4addr = value[:ipv4addr]
+          mac = value[:mac]
+
+          # Update the MAC attribute of the relevant Infoblox::HostIpv4addr.
+          # Note that we cannot set MAC to nil.
+          success = false
+          unless mac.nil?
+            host.ipv4addrs.each do |e|
+              if ipv4addr == e.ipv4addr
+                e.mac = mac
+                success = true
+              end
+            end
+          end
+
+          # If we did not find the ipv4addr on the
+          # host, add it now.
+          host.ipv4addrs = params[:ipv4addrs] unless success
+
+        else
+          host.send("#{key}=", value)
+        end
+      end
+
+      host.put
+    end
   end
 end
