@@ -22,17 +22,14 @@ module Infoblox
       unless range.empty?
         ips = range.first.next_available_ip(num, exclude)
         if ips.nil?
-          Chef::Log.info 'No IP address available in range'
-          return false
+          raise 'No IP address available in range'
         else
           availabe_ip = ips.first
           Chef::Log.info "Next available IP  is : #{availabe_ip}"
           return availabe_ip
         end
-      else
-        Chef::Log.info 'Range not found.'
-        return false
       end
+      raise 'Range not found.'
     end
 
     # get next available ip from network
@@ -41,17 +38,14 @@ module Infoblox
       unless network_obj.empty?
         ips = network_obj.first.next_available_ip(num, exclude)
         if ips.nil?
-          Chef::Log.info 'No IP address available in network'
-          return false
+          raise 'No IP address available in network'
         else
           availabe_ip = ips.first
           Chef::Log.info "Next available IP  is : #{availabe_ip}"
           return availabe_ip
         end
-      else
-        Chef::Log.info 'Network not found.'
-        return false
       end
+      raise 'Network not found.'
     end
 
     def create_host_record(params)
@@ -62,14 +56,9 @@ module Infoblox
       record.extattrs = params[:extattrs] if params[:extattrs]
       record.comment = params[:comment] if params[:comment]
 
-      begin
-        resp = record.post
-        Chef::Log.info 'Host record successfully created.'
-        return resp
-      rescue StandardError => e
-        Chef::Log.error e.message
-        return false
-      end
+      resp = record.post
+      Chef::Log.info 'Host record successfully created.'
+      return resp
     end
 
     # create a record based on the record type A/AAAA/CNAME/PTR
@@ -88,14 +77,9 @@ module Infoblox
       record.view = params[:view] if params[:view]
       record.extattrs = params[:extattrs] if params[:extattrs]
 
-      begin
-        resp = record.post
-        Chef::Log.info "#{record_type} Record is successfully created."
-        return resp
-      rescue StandardError => e
-        Chef::Log.error e.message
-        return false
-      end
+      resp = record.post
+      Chef::Log.info "#{record_type} Record is successfully created."
+      return resp
     end
 
     # create fixedaddress record
@@ -112,15 +96,10 @@ module Infoblox
       else
         record.match_client = 'RESERVED'
       end
-      
-      begin
-        resp = record.post
-        Chef::Log.info 'Fixed Address Record is successfully created.'
-        return resp
-      rescue StandardError => e
-        Chef::Log.error e.message
-        return false
-      end
+
+      resp = record.post
+      Chef::Log.info 'Fixed Address Record is successfully created.'
+      return resp
     end
 
     # remove host record
@@ -131,19 +110,12 @@ module Infoblox
       search_params[:ipv6addr] = params[:ipv6addr] if params[:ipv6addr]
 
       record = Infoblox::Host.find(connection, search_params)
-      begin
-        unless record.empty?
-          record.first.delete
-          Chef::Log.info 'Host record successfully deleted'
-          return true
-        else
-          Chef::Log.info 'Host record information not found'
-          return false
-        end
-      rescue StandardError => e
-        Chef::Log.error e.message
-        return false
+      unless record.empty?
+        record.first.delete
+        Chef::Log.info 'Host record successfully deleted'
+        return true
       end
+      raise 'Host record information not found'
     end
 
     # remove fixedaddress record
@@ -151,21 +123,14 @@ module Infoblox
       search_params = {}
       search_params[:ipv4addr] = params[:ipv4addr] if params[:ipv4addr]
       search_params[:ipv6addr] = params[:ipv6addr] if params[:ipv6addr]
- 
+
       record = Infoblox::Fixedaddress.find(connection, search_params).first
-      begin
-        unless record.nil?
-          resp = record.delete
-          Chef::Log.info 'Fixedaddress successfully deleted'
-          return resp
-        else
-          Chef::Log.info 'Fixedaddress record not found'
-          return false
-        end
-      rescue StandardError => e
-        Chef::Log.error e.message
-        return false
+      unless record.nil?
+        resp = record.delete
+        Chef::Log.info 'Fixedaddress successfully deleted'
+        return resp
       end
+      raise 'Fixedaddress record not found'
     end
 
     # remove A record
@@ -176,18 +141,11 @@ module Infoblox
 
       records = Infoblox::Arecord.find(connection, search_params)
       unless records.empty?
-        begin
-          records.each { |record| record.delete }
-          Chef::Log.info 'Arecord(s) successfully deleted'
-          return true
-        rescue StandardError => e
-          Chef::Log.error e.message
-          return false
-        end
-      else
-        Chef::Log.info 'Arecord Not Found. Please verify IP address and hostname.'
-        return false
+        records.each { |record| record.delete }
+        Chef::Log.info 'Arecord(s) successfully deleted'
+        return true
       end
+      raise 'Arecord Not Found. Please verify IP address and hostname.'
     end
 
     # remove AAAA record
@@ -197,18 +155,11 @@ module Infoblox
       search_params[:ipv6addr] = params[:ipv6addr] if params[:ipv6addr]
       records = Infoblox::AAAArecord.find(connection, search_params)
       unless records.empty?
-        begin
           records.each { |record| record.delete }
           Chef::Log.info 'AAAA record(s) successfully deleted'
           return true
-        rescue StandardError => e
-          Chef::Log.error e.message
-          return false
-        end
-      else
-        Chef::Log.info 'AAAA record Not Found. Please verify IP address and hostname.'
-        return false
       end
+      raise 'AAAA record Not Found. Please verify IP address and hostname.'
     end
 
     # remove CNAME record
@@ -218,18 +169,11 @@ module Infoblox
       search_params[:canonical] = params[:canonical] if params[:canonical]
       records = Infoblox::Cname.find(connection, search_params)
       unless records.empty?
-        begin
-          records.each { |record| record.delete }
-          Chef::Log.info 'Cname Record successfully deleted'
-          return true
-        rescue StandardError => e
-          Chef::Log.error e.message
-          return false
-        end
-      else
-        Chef::Log.info 'Cname Record Not Found.'
-        return false
+        records.each { |record| record.delete }
+        Chef::Log.info 'Cname Record successfully deleted'
+        return true
       end
+      raise 'Cname Record Not Found.'
     end
 
     # remove PTR record
@@ -239,18 +183,11 @@ module Infoblox
       search_params[:ptrdname] = params[:ptrdname] if params[:ptrdname]
       records = Infoblox::Ptr.find(connection, search_params)
       unless records.empty?
-        begin
-          records.each { |record| record.delete }
-          Chef::Log.info 'Ptr record successfully deleted'
-          return true
-        rescue StandardError => e
-          Chef::Log.error e.message
-          return false
-        end
-      else
-        Chef::Log.info 'Ptr record not Found'
-        return false
+        records.each { |record| record.delete }
+        Chef::Log.info 'Ptr record successfully deleted'
+        return true
       end
+      raise 'Ptr record not Found'
     end
 
   end
